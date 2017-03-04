@@ -8,6 +8,7 @@
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [com.tiemens/secretshare "1.4.2"]
                  [json-html "0.4.0"]
+                 [formidable "0.1.10"]
                  ]
 
   :jvm-opts ["-Djava.security.egd=file:/dev/random" ;use a proper random source

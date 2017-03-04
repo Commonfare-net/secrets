@@ -3,7 +3,7 @@
 ;; part of Decentralized Citizen Engagement Technologies (D-CENT)
 ;; R&D funded by the European Commission (FP7/CAPS 610349)
 
-;; Copyright (C) 2015 Dyne.org foundation
+;; Copyright (C) 2015-2017 Dyne.org foundation
 
 ;; Sourcecode designed, written and maintained by
 ;; Denis Roio <jaromil@dyne.org>
@@ -30,60 +30,43 @@
 
 (declare render-slice)
 (declare extract-quorum)
-(declare extract-ahal)
-(declare extract-int)
+(declare extract-pin)
 
-
-(defn new-passphrase [conf type]
-  (format "%s_%s_%s_FXC_%s_%dX" (:protocol conf) type
-          (:integer (rand/create (:length conf)))
-          (:integer (rand/create (:length conf)))
-          0))
 
 (defn create-secret
   "Takes a configuration, the blockchain type and optionally two integers, creates a wallet address, returned as a string"
   ([conf type]
-   (let [ah (:integer (rand/create (:length conf)))
-         al (:integer (rand/create (:length conf)))]
-     (create-secret conf type ah al)))
+   (let [pin (:integer (rand/create (:length conf)))]
+     (create-secret conf type pin)))
 
-  ([conf type hi lo]
+  ([conf type pin]
    {:pre  [(contains? conf :protocol)
            (contains? conf :length)
            (contains? conf :entropy)]
     :post [(= (:total conf) (count (:slices %)))]}
 
-   (let [ah (ssss/shamir-split conf hi)
-         al (ssss/shamir-split conf lo)]
+   (let [split (ssss/shamir-split conf pin)]
+         
+     {:config (assoc conf :type type)
 
-     ;; secret wallet rendering
-     ;; slices: collection of rendered string slices for ssss
-
-     ;; unique id
-     {
-      :config (assoc conf :type type)
-
-      :slices (loop [lah (first (:shares ah))
-                     lal (first (:shares al))
+      :slices (loop [share (first (:shares split))
                      res []
                      c 1]
-                (if (< c (count (:shares ah)))
-                  (recur (nth (:shares ah) c)
-                         (nth (:shares al) c)
-                         (merge res (render-slice conf type lah lal c))
+                (if (< c (count (:shares split)))
+                  (recur (nth (:shares split) c)
+                         (merge res (render-slice conf type share c))
                          (inc c))
-                  (merge res (render-slice conf type lah lal c))))
+                  (merge res (render-slice conf type share c))))
       })))
 
 (defn unlock-secret
-  "Takes a secret and a cookie, returns a ready to use NXT passphrase"
+  "Takes shares, returns the pin"
   [conf secret slice]
   {:pre [(contains? conf :quorum)
          (contains? secret :slices)]}
   (let [quorum (extract-quorum conf secret slice)
-        ah (ssss/shamir-combine (:ah quorum))
-        al (ssss/shamir-combine (:al quorum))]
-    (render-slice conf ah al 0)))
+        pin (ssss/shamir-combine (:ah quorum))]
+    (render-slice conf pin 0)))
 
 (defn extract-quorum
   "Takes a config, a secret and a slice and tries to combine the secret and the slice in a collection of integers ready for shamir-combine. Returns a map {:ah :al} with the collections."
@@ -96,51 +79,61 @@
 
   (let [ordered (sort-by last (:slices secret))]
   ;; reconstruct a collection of slices
-  (loop [cah [(extract-int conf slice "ah")]
-         cal [(extract-int conf slice "al")]
+  (loop [num [(extract-pin conf slice)]
          c 1]
 
-    (if (< (count cah) (:quorum conf))
+    (if (< (count num) (:quorum conf))
 
       (recur
-       (conj cah (extract-int conf (nth ordered c) "ah"))
-       (conj cal (extract-int conf (nth ordered c) "al"))
+       (conj num (extract-pin conf (nth ordered c)))
        (inc c))
 
       ;; return
-      {:ah {:header {:_id (:_id secret)
+      {:pin {:header {:_id (:_id secret)
                      :quorum (int (:quorum conf))
                      :total (int (:total conf))
                      :prime (:prime conf)
                      :description (:description conf)}
-            :shares (map biginteger (conj cah (extract-int conf (nth (:slices secret) c) "ah")))}
-       :al {:header {:_id (:_id secret)
-                     :quorum (int (:quorum conf))
-                     :total (int (:total conf))
-                     :prime (:prime conf)
-                     :description (:description conf)}
-            :shares (map biginteger (conj cal (extract-int conf (nth (:slices secret) c) "al")))}}))))
+            :shares (map biginteger
+                         (conj num 
+                               (extract-pin conf (nth (:slices secret) c))
+                               ))}}))))
 
-(defn render-slice [conf type ah al idx]
-   (format "%s_%s_%s_%s_%dX" (:protocol conf) type ah al idx))
+(defn render-slice [conf type share idx]
+   (format "%s_%s_%s_%d" (:protocol conf) type share idx))
 
-(defn extract-ahal
-  "extract the high or low part in an fxc address"
-  [conf addr ah-or-al]
+(defn extract-pin
+  "Extract the numeric part in an fxc string."
+  [conf addr]
   (try
     (let [toks (str/split (util/trunc addr 128) #"_")]
-      (if-not (= (subs (first toks) 0 4) "FXC1")
+      (if-not (= (subs (first toks) 0 4) (:protocol conf))
         (throw (Exception.
                 (format "Invalid FXC address: %s" (first toks))))
-        (nth toks (case ah-or-al "al" 4 "ah" 2 0))
-        ;; TODO: check that only valid characters in alphabet are present
+        (nth toks 2) ; second position
+        ;; TODO: check that only numeric characters are present
         ))
 
     (catch Exception e
       (let [error (.getMessage e)]
-        (util/log! 'ERR 'fxc/extract-lo error)))
+        (util/log! 'ERR 'fxc/extract-pin error)))
 
     (finally)))
 
-(defn extract-int [conf addr ah-or-al]
-   (extract-ahal conf addr ah-or-al))
+(defn extract-share
+  "Extract the numeric part in a fxc share, last number is the position"
+  [conf addr]
+  (try
+    (let [toks (str/split (util/trunc addr 128) #"_")]
+      (if-not (= (subs (first toks) 0 4) (:protocol conf))
+        (throw (Exception.
+                (format "Invalid FXC address: %s" (first toks))))
+        (str (nth toks 2) (nth toks 3))
+        ;; TODO: check that only numeric characters are present
+        ))
+
+    (catch Exception e
+      (let [error (.getMessage e)]
+        (util/log! 'ERR 'fxc/extract-pin error)))
+
+    (finally)))

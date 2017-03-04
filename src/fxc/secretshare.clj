@@ -4,7 +4,7 @@
 ;; R&D funded by the European Commission (FP7/CAPS 610349)
 
 ;; Based on Secret Share Java implementation by Tim Tiemens
-;; Copyright (C) 2015 Denis Roio <jaromil@dyne.org>
+;; Copyright (C) 2015-2017 Denis Roio <jaromil@dyne.org>
 
 ;; Shamir's Secret Sharing algorithm was invented by Adi Shamir
 ;; Shamir, Adi (1979), "How to share a secret", Communications of the ACM 22 (11): 612–613
