@@ -35,15 +35,26 @@
    :length 6
    :entropy 3.1})
 
+
+(def generate-form-spec
+  {:renderer :bootstrap3-stacked
+   :fields [{:name "PIN:"   :type :text}]
+   :validations [[:required [:field :value]]]
+   :action "/generate"
+   :method "post"})
+
 (def recovery-form-spec
   {:renderer :bootstrap3-stacked
-   :fields [{:name "1st: "  :type :text}
-            {:name "2nd: "  :type :text}
-            {:name "3rd: "  :type :text}]
-   :validations [[:required [:field :value]]]
+   :fields [{:name "1"  :type :text}
+            {:name "2"  :type :text}
+            {:name "3"  :type :text}]
+   :validations [[:required ["1" "2" "3"]]]
+                 
    :action "/recover"
    :method "post"})
 
+(defn parse-int [s]
+  (Integer. (re-find  #"\d+" s )))
 
 (defn render-page [{:keys [title body] :as content}]
   (page/html5
@@ -64,39 +75,43 @@
 (defroutes app-routes
 
   (GET "/" []
+      (render-page
+       {:title "PIN Secret Sharing"
+        :body [:div {:class "secrets row center"}
+               [:div {:class "content input-form"}
+                (fc/render-form generate-form-spec)]]}))
 
-  (let [pin (:integer (rand/create (:length settings)))
-        main   (fxc/render-slice  settings (:type settings) pin 0)
-        slices (fxc/create-secret settings (:type settings) pin)]
+  (POST "/g*" {params :params}
+    (let [pin    (biginteger (params "PIN:"))
+          main   (fxc/render-slice  settings (:type settings) pin 0)
+          slices (fxc/create-secret settings (:type settings) pin)]
 
-    (render-page
-     {:title "FXC.dyne.org - Shared PIN Generator"
-      :body [:div {:class "secrets row center"}
-             [:div {:class "password"}
-              "Your PIN:" [:div {:class "content"}
-                      (fxc/extract-pin settings main)]]
-             [:div {:class "slices"}
-              [:h3 (str "Split in " (:total settings)
-                        " shared secrets, quorum "
-                        (:quorum settings) ":")]
-              [:ul
-               (map #(conj [:li {:class "content"}] %)
-                    (map #(fxc/extract-share settings %)
-                    (:slices slices)))]]]})))
-      
+      (render-page
+       {:title "PIN Secret Sharing"
+        :body [:div {:class "secrets row center"}
+               [:div {:class "password"}
+                "Your PIN:" [:div {:class "content"}
+                             (fxc/extract-pin settings main)]]
+               [:div {:class "slices"}
+                [:h3 (str "Split in " (:total settings)
+                          " shared secrets, quorum "
+                          (:quorum settings) ":")]
+                [:ul (map #(conj [:li {:class "content"}] %)
+                          (map #(fxc/extract-share settings %)
+                               (:slices slices)))]]]})))
+
   (GET "/r*" []
-       (render-page {:title "Shared PIN Recovery"
-                     :body [:div {:class "recovery row center"}
-                            [:div {:class "input-form"}
-                            (fc/render-form recovery-form-spec)
-                            ]]}))
+    (render-page {:title "PIN Secret Recovery"
+                  :body [:div {:class "recovery row center"}
+                         [:div {:class "content input-form"}
+                          (fc/render-form recovery-form-spec)
+                          ]]}))
 
-  (POST "/r*" []
-        (render-page {:title "Shared PIN Recovery"
-                      :body "WIP"}))
-
-  (route/resources "/"
-                   "/r*")
+  (POST "/r*" {params :params}
+    (render-page {:title "PIN Secret  Recovery"
+                  :body (let [para (fp/parse-params recovery-form-spec params)])
+                  para
+                  }))
 
   (route/not-found "Not Found"))
 
