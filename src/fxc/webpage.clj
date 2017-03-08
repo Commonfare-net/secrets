@@ -44,13 +44,13 @@
       [:meta {:property "og:description" :content desc }]
       [:meta {:property "og:type" :content "website" }]
       [:meta {:property "og:url" :content url }]
-      [:meta {:property "og:image" :content (str url "static/img/software_by_dyne.png") }]
+      [:meta {:property "og:image" :content (str url "/static/img/software_by_dyne.png") }]
 
       [:meta {:name "twitter:card" :content "summary"}]
       [:meta {:name "twitter:site" :content "@DyneOrg"}]
       [:meta {:name "twitter:title" :content title }]
       [:meta {:name "twitter:description" :content desc }]
-      [:meta {:name "twitter:image" :content (str url "static/img/software_by_dyne.png") }]
+      [:meta {:name "twitter:image" :content (str url "/static/img/software_by_dyne.png") }]
 
     [:title title]
     (page/include-css "/static/css/bootstrap.min.css")

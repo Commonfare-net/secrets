@@ -6,6 +6,8 @@ Simple Secret Sharing Service for social and decentralised management of passwor
 
 Free and fully functional demo on [secrets.dyne.org](https://secrets.dyne.org)
 
+[![Build Status](https://travis-ci.org/PIENews/secrets.svg?branch=master)](https://travis-ci.org/PIENews/secrets)
+
 Secrets uses the underlying cryptographic protocol developed in [Freecoin](https://github.com/PIENews/freecoin). It is used to split pins into pieces to be distributed to friends, so that when the pin is lost it can be recuperated by putting together the pieces. Secret sharing can have many other uses, depending from the context in which it is deployed and this tool aims at being a very simple and highly available implementation free for anyone to use.
 
 The FXC protocol and its use cases related to social digital currency are explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the research conducted in the [D-CENT project](http://dcentproject.eu/resource_category/publications/).
