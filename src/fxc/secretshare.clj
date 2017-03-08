@@ -82,6 +82,18 @@
     {:header header
      :shares (map biginteger shares)}))
 
+(defn shamir-load
+  "Loads a new share into the Shamir's engine, internal use in combine"
+  [conf shares pos new]
+  (conj shares
+        (com.tiemens.secretshare.engine.SecretShare$ShareInfo.
+         pos new
+         (com.tiemens.secretshare.engine.SecretShare$PublicInfo.
+          (:total conf)
+          (:quorum conf)
+          (SecretShare/getPrimeUsedFor4096bigSecretPayload)
+          (:description conf)))))
+
 (defn shamir-combine
   "Takes a secret (header and collection of integers) and returns the
   unlocked big integer"
@@ -93,20 +105,18 @@
 
   (let [header (:header secret)
         shares (:shares secret)]
-    ;; (util/log! "ACK" 'shamir-combine [ header shares ])
-    (loop [s (first shares)
-           res []
+
+    (loop [res []
+           s (first shares)
            c 1]
 
       ;; TODO: check off-by-one on this one
 
       (if (< c (count shares))
-        (recur (nth shares c)
-               (conj res (com.tiemens.secretshare.engine.SecretShare$ShareInfo.
-                           c  s (com.tiemens.secretshare.engine.SecretShare$PublicInfo.
-                                 (:total header) (:quorum header)
-                                 ((get-prime (:prime header)))
-                                 (:description header))))
+        (recur (shamir-load header res c s)
+               (nth shares c)
                (inc c))
-        ;; return
-        (.getSecret (.combine (shamir-set-header header) res))))))
+        ;; else return
+        (.getSecret
+         (.combine (shamir-set-header header)
+                   (shamir-load header res c s)))))))
