@@ -12,6 +12,10 @@ li {
 	/* display: inline-block; */
 }
 
+.navbar-text {
+	margin-top: 22px;
+}
+
 .password .content {
 	font-size: 2em;
 }

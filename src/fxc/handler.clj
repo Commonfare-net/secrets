@@ -85,7 +85,7 @@
 
   (GET "/" []
       (web/render-page
-       {:title "PIN Secret Sharing"
+       {:section "Split PIN"
         :body [:div {:class "secrets row center"}
                [:div {:class "content input-form"}
                 (fc/render-form generate-form-spec)]]}))
@@ -95,7 +95,7 @@
           shares (:shares (ssss/shamir-split settings pin))]
 
       (web/render-page
-       {:title "PIN Secret Sharing"
+       {:section "Split PIN"
         :body [:div {:class "secrets row center"}
                [:div {:class "password"}
                 "Your PIN:" [:div {:class "content"} pin]]
@@ -109,15 +109,15 @@
 
 
   (GET "/r*" []
-    (web/render-page {:title "PIN Secret Recovery"
-                  :body [:div {:class "recovery row center"}
+    (web/render-page {:section "Recover PIN"
+                      :body [:div {:class "recovery row center"}
                          [:div {:class "content input-form"}
                           (fc/render-form recovery-form-spec)
                           ]]}))
 
   (POST "/r*" {params :params}
-    (web/render-page {:title "PIN Secret  Recovery"
-                  :body (let [para (fp/parse-params recovery-form-spec params)
+    (web/render-page {:section "Recover PIN"
+                      :body (let [para (fp/parse-params recovery-form-spec params)
                               converted (str2int-trim-pos (vals para))]
                           (present/edn->html
                            {:0 (count converted)
