@@ -34,6 +34,7 @@
             [fxc.secretshare :as ssss]
             [fxc.random :as rand]
             [fxc.fxc :as fxc]
+            [fxc.marshalling :refer :all]
             [json-html.core :as present]
             [hiccup.page :as page]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
@@ -74,21 +75,6 @@
    :action "/recover"
    :method "post"})
 
-(defn parse-int [s]
-  (Integer. (re-find  #"\d+" s )))
-
-(defn add-pos-to-share
-  "add a final cipher to each number in the shares collection which
-  indicates its position, returns an array of strings"
-  [shares]
-    (loop [res []
-           s (first shares)
-           c 1]
-      (if (< c (count shares))
-        (recur (conj res (format "%d%d" s c))
-               (nth shares c)
-               (inc c))
-        (conj res (format "%d%d" s c)))))
   
            
     
@@ -119,7 +105,7 @@
                           " shared secrets, quorum "
                           (:quorum settings) ":")]
                 [:ul (map #(conj [:li {:class "content"}] %) 
-                          (add-pos-to-share shares))]]]})))
+                          (int2str-append-pos shares))]]]})))
 
 
   (GET "/r*" []
@@ -132,9 +118,7 @@
   (POST "/r*" {params :params}
     (web/render-page {:title "PIN Secret  Recovery"
                   :body (let [para (fp/parse-params recovery-form-spec params)
-                              ordered (sort-by last (vals para))
-                              trimmed (map #(subs % 0 (dec (count %))) ordered)
-                              converted (map biginteger trimmed)]
+                              converted (str2int-trim-pos (vals para))]
                           (present/edn->html
                            {:0 (count converted)
                             :header settings
