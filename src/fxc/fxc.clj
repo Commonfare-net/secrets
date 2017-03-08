@@ -56,8 +56,7 @@
                   (recur (nth (:shares split) c)
                          (merge res (render-slice conf type share c))
                          (inc c))
-                  (merge res (render-slice conf type share c))))
-      })))
+                  (merge res (render-slice conf type share c))))})))
 
 (defn unlock-secret
   "Takes shares, returns the pin"
@@ -89,15 +88,14 @@
        (inc c))
 
       ;; return
-      {:pin {:header {:_id (:_id secret)
-                     :quorum (int (:quorum conf))
-                     :total (int (:total conf))
-                     :prime (:prime conf)
-                     :description (:description conf)}
-            :shares (map biginteger
-                         (conj num 
-                               (extract-pin conf (nth (:slices secret) c))
-                               ))}}))))
+      {:header {:_id (:_id secret)
+                :quorum (int (:quorum conf))
+                :total (int (:total conf))
+                :prime (:prime conf)
+                :description (:description conf)}
+       :shares (map biginteger
+                    (conj num 
+                          (extract-pin conf (nth (:slices secret) c))))}))))
 
 (defn render-slice [conf type share idx]
    (format "%s_%s_%s_%d" (:protocol conf) type share idx))

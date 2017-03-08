@@ -1,10 +1,14 @@
-# FXC - Freecoin's Secret Sharing
+# Secrets
+
+Simple Secret Sharing Service for social and decentralised management of passwords
 
 [![software by Dyne.org](https://www.dyne.org/wp-content/uploads/2015/12/software_by_dyne.png)](http://www.dyne.org)
 
-FXC is the underlying cryptographic protocol used in [Freecoin](https://github.com/pienews/freecoin). It is used to generate passwords that are split into pieces to be distributed to friends, so that when the password is lost it can be recuperated by putting together the pieces.
+Free and fully functional demo on [secrets.dyne.org](https://secrets.dyne.org)
 
-The FXC protocol and its use cases are explained in detail in this document [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the research conducted in the [D-CENT project](http://dcentproject.eu/resource_category/publications/).
+Secrets uses the underlying cryptographic protocol developed in [Freecoin](https://github.com/PIENews/freecoin). It is used to split pins into pieces to be distributed to friends, so that when the pin is lost it can be recuperated by putting together the pieces. Secret sharing can have many other uses, depending from the context in which it is deployed and this tool aims at being a very simple and highly available implementation free for anyone to use.
+
+The FXC protocol and its use cases related to social digital currency are explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the research conducted in the [D-CENT project](http://dcentproject.eu/resource_category/publications/).
 
 
 ## Prerequisites
@@ -17,19 +21,37 @@ You will need [Leiningen][] 2.0.0 or above installed.
 
 ## Running
 
-To start a web server for the application, run:
+Install all necessary dependencies, for instance using the following packages found on APT based systems:
 
-    lein ring server
+```
+wget openjdk-7-jdk libversioneer-clojure haveged
+```
 
+then install Leiningen which will take care of all Clojure dependencies
 
+```
+mkdir ~/bin
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein -O ~/bin/lein
+chmod +x ~/bin/lein
+```
 
-## License
+then from inside the Secrets source, start it with
 
-Part of Decentralized Citizen Engagement Technologies (D-CENT)
+```
+lein ring server
+```
 
-R&D funded by the European Commission (FP7/CAPS 610349)
+This command will open a browser pointing on the service running on localhost port 8000
 
-Designed and maintained by Denis Roio <jaromil@dyne.org>
+To start only a web server for the application, but no browser, run:
+
+```
+lein ring server-headless
+```
+
+## Specs
+
+Secrets development is based on research made by the [D-CENT project](http://dcentproject.eu) (Decentralized Citizen Engagement Technologies), R&D funded by the European Commission (FP7/CAPS 610349).
 
 Based on the Shamir Secret Sharing algorithm by Adi Shamir
  - Shamir, Adi (1979), "How to share a secret", Communications of the ACM 22 (11): 612–613
@@ -37,10 +59,17 @@ Based on the Shamir Secret Sharing algorithm by Adi Shamir
 
 Implemented using the Secret Share Java library by Tim Tiemens with a 4096 cyphers prime number.
 
-Industry standard references:
+Industry standards:
  - [ISO/IEC 19592-1:2016](https://www.iso.org/standard/65422.html) Information technology -- Security techniques -- Secret sharing -- Part 1: General
  - [ISO/IEC FDIS 19592-2 (Under development)](https://www.iso.org/standard/65425.html)  Information technology -- Security techniques -- Secret sharing -- Part 2: Fundamental mechanisms
 
+
+
+## License
+
+Secrets is Copyright (C) 2015-2017 by the Dyne.org Foundation
+
+Software Designed, written and maintained by Denis Roio <jaromil@dyne.org>
 
 ```
 This program is free software: you can redistribute it and/or modify

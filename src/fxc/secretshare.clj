@@ -1,4 +1,4 @@
-;; Freecoin - digital social currency toolkit
+;; Secrets
 
 ;; part of Decentralized Citizen Engagement Technologies (D-CENT)
 ;; R&D funded by the European Commission (FP7/CAPS 610349)

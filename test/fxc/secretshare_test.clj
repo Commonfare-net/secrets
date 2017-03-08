@@ -4,6 +4,7 @@
    [fxc.secretshare :as ssss]
    [fxc.random :as rand]
    [fxc.marshalling :refer :all]
+   [kerodon.core :as k]
    [clojure.pprint :as pp]))
 
 ;; defaults
@@ -24,7 +25,7 @@
    :length 6
    :entropy 3.1})
 
-(fact "Secret Sharing"
+(fact "Secret Sharing unit tests"
       (def pin (:integer (rand/create (:length settings))))
 
       (pp/pprint (str "PIN: " pin))
@@ -70,4 +71,11 @@
                    {:header settings
                     :shares (take (:quorum settings) back)}))
             (pp/pprint back))
+)
+
+(defn debug [state]
+  (clojure.pprint/pprint state)
+  state)
+
+(fact "Web integration tests (PIN)"
 )
