@@ -17,7 +17,7 @@ The FXC protocol and its use cases related to social digital currency are explai
 ## Running Secrets on your own computer
 
 
-<img align="right" src="resources/static/img/clojure.png">
+<img align="right" src="resources/public/static/img/clojure.png">
 
 Secrets is written in Clojure and is fully cross-platform: one can run it locally on a GNU/Linux machine, as well on Apple/OSX and MS/Windows.
 
