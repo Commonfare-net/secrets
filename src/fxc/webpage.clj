@@ -30,7 +30,7 @@
   (let [title "Simple Secret Sharing Service"
         desc "Social and decentralised management of passwords, free software by Dyne.org"
         url "https://secrets.dyne.org"]
-    
+
     (page/html5
      [:head [:meta {:charset "utf-8"}]
       [:meta {:http-equiv "X-UA-Compatible" :content "IE=edge,chrome=1"}]
@@ -52,42 +52,42 @@
       [:meta {:name "twitter:description" :content desc }]
       [:meta {:name "twitter:image" :content (str url "/static/img/software_by_dyne.png") }]
 
-    [:title title]
-    (page/include-css "/static/css/bootstrap.min.css")
-    (page/include-css "/static/css/bootstrap-theme.min.css")
-    (page/include-css "/static/css/gh-fork-ribbon.css")
-    (page/include-css "/static/css/json-html.css")
-    (page/include-css "/static/css/freecoin.css")]
-   [:body {:class "fxc"}
-    [:div {:class "github-fork-ribbon-wrapper right"}
-     [:div {:class "github-fork-ribbon"}
-      [:a {:href "https://github.com/PIENews/secrets"} "Fork me!   :^)"]]]
+      [:title title]
+      (page/include-css "/static/css/bootstrap.min.css")
+      (page/include-css "/static/css/bootstrap-theme.min.css")
+      (page/include-css "/static/css/gh-fork-ribbon.css")
+      (page/include-css "/static/css/json-html.css")
+      (page/include-css "/static/css/freecoin.css")]
+     [:body {:class "fxc"}
+      [:div {:class "github-fork-ribbon-wrapper right"}
+       [:div {:class "github-fork-ribbon"}
+        [:a {:href "https://github.com/PIENews/secrets"} "Fork me!   :^)"]]]
 
-    [:nav {:class "navbar navbar-default navbar-static-top"}
-     [:div {:class "container"}
-      [:ul {:class "nav navbar-nav"}
-       [:li [:a {:href "https://github.com/PIENews/secrets"} "About Secrets"]]
-       [:li {:role "separator" :class "divider"} ]
-       [:li [:a {:href "/"} "Split PIN" [:span {:class "sr-only"}"(current)"]]]
-       [:li [:a {:href "/recover"} "Recover PIN" ]]
-       [:li {:role "separator" :class "divider"} ]
-       [:p {:class "navbar-text"} [:i "...work in progress:" ]]
-       [:p {:class "navbar-text"} [:i "Generate Password"]]
-       [:p {:class "navbar-text"} [:i "Recover Password"]]]]]
+      [:nav {:class "navbar navbar-default navbar-static-top"}
+       [:div {:class "container"}
+        [:ul {:class "nav navbar-nav"}
+         [:li [:a {:href "https://github.com/PIENews/secrets"} "About Secrets"]]
+         [:li {:role "separator" :class "divider"} ]
+         [:li [:a {:href "/"} "Split PIN" [:span {:class "sr-only"}"(current)"]]]
+         [:li [:a {:href "/recover"} "Recover PIN" ]]
+         [:li {:role "separator" :class "divider"} ]
+         [:p {:class "navbar-text"} [:i "...work in progress:" ]]
+         [:p {:class "navbar-text"} [:i "Generate Password"]]
+         [:p {:class "navbar-text"} [:i "Recover Password"]]]]]
 
-    [:div {:class "container"}
-     [:h1 "Simple Secret Sharing Service" ]
-     [:h2 "Social and decentralised management of passwords"]
-     [:h3 section]
-     body
+      [:div {:class "container"}
+       [:h1 "Simple Secret Sharing Service" ]
+       [:h2 "Social and decentralised management of passwords"]
+       [:h3 section]
+       body
 
-     [:footer {:style "margin-top: 3em"}
-      [:hr]
-      [:div {:class "pull-left footer"}
-       [:a {:href "https://www.dyne.org"} [:img {:src "/static/img/software_by_dyne.png"
-                                               :alt   "Software by Dyne.org"
-                                               :title "Software by Dyne.org"}]]]
-      [:div {:class "pull-right footer"}
-       [:img {:src "static/img/AGPLv3.png" :style "margin-top: 3em"
-              :alt "Affero GPLv3 License" :title "Affero GPLv3 License"} ]]
-      ]]])))
+       [:footer {:style "margin-top: 3em"}
+        [:hr]
+        [:div {:class "pull-left footer"}
+         [:a {:href "https://www.dyne.org"} [:img {:src "/static/img/software_by_dyne.png"
+                                                   :alt   "Software by Dyne.org"
+                                                   :title "Software by Dyne.org"}]]]
+        [:div {:class "pull-right footer"}
+         [:img {:src "static/img/AGPLv3.png" :style "margin-top: 3em"
+                :alt "Affero GPLv3 License" :title "Affero GPLv3 License"} ]]
+        ]]])))

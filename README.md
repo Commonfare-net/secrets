@@ -13,23 +13,28 @@ Secrets uses the underlying cryptographic protocol developed in [Freecoin](https
 The FXC protocol and its use cases related to social digital currency are explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the research conducted in the [D-CENT project](http://dcentproject.eu/resource_category/publications/).
 
 
-## Prerequisites
 
-You will need [Leiningen][] 2.0.0 or above installed.
-
-[leiningen]: https://github.com/technomancy/leiningen
+## Running Secrets on your own computer
 
 
+<img align="right" src="resources/static/img/clojure.png">
 
-## Running
+Secrets is written in Clojure and is fully cross-platform: one can run it locally on a GNU/Linux machine, as well on Apple/OSX and MS/Windows.
 
-Install all necessary dependencies, for instance using the following packages found on APT based systems:
+<img align="left" src="http://leiningen.org/img/leiningen.jpg">
+
+The following software is required:
+
+ - OpenJDK http://openjdk.java.net
+ - Leiningen e Clojure http://leiningen.org
+
+For instance on Devuan systems one can install all necessary dependencies via the following packages:
 
 ```
 wget openjdk-7-jdk libversioneer-clojure haveged
 ```
 
-then install Leiningen which will take care of all Clojure dependencies
+then install Leiningen which will take care of all Clojure dependencies:
 
 ```
 mkdir ~/bin
@@ -37,7 +42,7 @@ wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein -O 
 chmod +x ~/bin/lein
 ```
 
-then from inside the Secrets source, start it with
+then from inside the Secrets source, start it with:
 
 ```
 lein ring server
