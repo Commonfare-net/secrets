@@ -50,11 +50,7 @@ lein ring server
 
 This command will open a browser pointing on the service running on localhost port 8000
 
-To start only a web server for the application, but no browser, run:
-
-```
-lein ring server-headless
-```
+To start only a web server for the application, but no browser, run: `server-headless`
 
 ## Specs
 
