@@ -44,13 +44,13 @@
       [:meta {:property "og:description" :content desc }]
       [:meta {:property "og:type" :content "website" }]
       [:meta {:property "og:url" :content url }]
-      [:meta {:property "og:image" :content (str url "/static/img/software_by_dyne.png") }]
+      [:meta {:property "og:image" :content (str url "/static/img/secret_ladies.jpg") }]
 
       [:meta {:name "twitter:card" :content "summary"}]
       [:meta {:name "twitter:site" :content "@DyneOrg"}]
       [:meta {:name "twitter:title" :content title }]
       [:meta {:name "twitter:description" :content desc }]
-      [:meta {:name "twitter:image" :content (str url "/static/img/software_by_dyne.png") }]
+      [:meta {:name "twitter:image" :content (str url "/static/img/secret_ladies.jpg") }]
 
       [:title title]
       (page/include-css "/static/css/bootstrap.min.css")
@@ -76,6 +76,7 @@
          [:p {:class "navbar-text"} [:i "Recover Password"]]]]]
 
       [:div {:class "container"}
+       [:img {:src "/static/img/secret_ladies.jpg" :class "pull-right img-responsive" :style "width: 16em; border:1px solid #010a40"}]
        [:h1 "Simple Secret Sharing Service" ]
        [:h2 "Social and decentralised management of passwords"]
        [:h3 section]
