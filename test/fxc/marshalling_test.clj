@@ -4,6 +4,8 @@
             [fxc.marshalling :as ms]
             [fxc.intcomp     :as ic ]))
 
+(pp/pprint {"------------------------------------------" "MARSHALLING_TESTS"})
+
 (def dyneseq [100 121 110 101 46 111 114 103]) ;; "dyne.org" in ascii codes
 
 (def longstring (str repeat "x" 512))

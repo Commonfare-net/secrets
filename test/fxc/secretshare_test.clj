@@ -7,6 +7,8 @@
    [kerodon.core :as k]
    [clojure.pprint :as pp]))
 
+(pp/pprint {"------------------------------------------" "SECRETSHARING_TESTS" })
+
 ;; defaults
 (def settings
   {:total (Integer. 5)
@@ -32,21 +34,21 @@
 
       (pp/pprint settings)
 
-      (def shares (:shares (ssss/shamir-split settings pin)))
+      (def shares (ssss/shamir-split settings pin))
 
       (fact "PIN is split in shares"
             (pp/pprint shares))
 
       (fact "PIN is retrieved from all shares"
-            (ssss/shamir-combine {:header settings
-                                  :shares shares}) => pin)
+            (ssss/shamir-combine shares) => pin)
 
       (fact "PIN is retrieved from quorum shares"
-            (ssss/shamir-combine {:header settings
-                                  :shares (take (:quorum settings) shares)})
+            (ssss/shamir-combine
+             {:header settings
+              :shares (take (:quorum settings) (:shares shares))})
             => pin)
 
-      (def marsh (int2str-append-pos shares))
+      (def marsh (int2str-append-pos (:shares shares)))
 
       (fact "Shares are marshalled into strings appending pos cipher"
             (fact "results in array of correct length"
