@@ -34,21 +34,35 @@
 
       (pp/pprint settings)
 
-      (def shares (ssss/shamir-split settings pin))
+      (def numshares (ssss/shamir-split settings pin))
 
-      (fact "PIN is split in shares"
-            (pp/pprint shares))
+      (fact "PIN is split in numeric shares"
 
-      (fact "PIN is retrieved from all shares"
-            (ssss/shamir-combine shares) => pin)
+      (let [a (:shares numshares)
+            f (take (:quorum settings) (:shares numshares))
+            l (cons (biginteger 0)
+                    (drop 1 (:shares numshares)))]
+        ;;(- (:total settings) (:quorum settings))
+        (pp/pprint {:all a
+                    :first f
+                    :last l})
 
-      (fact "PIN is retrieved from quorum shares"
-            (ssss/shamir-combine
-             {:header settings
-              :shares (take (:quorum settings) (:shares shares))})
-            => pin)
+        (fact "PIN is retrieved from all numeric shares"
+              (ssss/shamir-combine numshares) => pin)
 
-      (def marsh (int2str-append-pos (:shares shares)))
+        (fact "PIN is retrieved from numeric first quorum shares"
+              (ssss/shamir-combine
+               {:header settings
+                :shares f})
+              => pin)
+
+        (fact "PIN is retrieved from numeric last quorum shares"
+              (ssss/shamir-combine
+               {:header settings
+                :shares l})
+              => pin)
+        ))
+      (def shares (int2str-append-pos (:shares numshares)))
 
       (fact "Shares are marshalled into strings appending pos cipher"
             (fact "results in array of correct length"
@@ -62,8 +76,9 @@
                              (nth marsh (inc c))))))
             (pp/pprint marsh))
 
+      (def back (str2int-trim-pos shares))
+
       (fact "Marshalled strings are converted to integers"
-            (def back (str2int-trim-pos marsh))
 
             (fact "resulting in array of correct length"
                   (count marsh) => (:total settings))
@@ -71,8 +86,28 @@
             (fact "combine correctly into the PIN"
                   (ssss/shamir-combine
                    {:header settings
-                    :shares (take (:quorum settings) back)}))
+                    :shares (take (:quorum settings) back)}) => pin)
             (pp/pprint back))
+
+      (fact "PIN can be recovered"
+            (let [f (take (:quorum settings) back)
+                  l (drop (- (:total settings) (:quorum settings)) back)
+                  s [(nth back 0) (nth back 2) (nth back 4)]]
+              (fact "using first quorum shares"
+                    (pp/pprint {:first_quorum f})
+                    (ssss/shamir-combine
+                     {:header settings
+                      :shares f}) => pin)
+              (fact "using last quorum shares"
+                    (pp/pprint {:last_quorum l})
+                    (ssss/shamir-combine
+                     {:header settings
+                      :shares l}) => pin)
+              (fact "using scattered quorum shares"
+                    (pp/pprint {:scatter_quorum s})
+                    (ssss/shamir-combine
+                     {:header settings
+                      :shares s}) => pin)))
 )
 
 (defn debug [state]

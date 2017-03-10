@@ -96,5 +96,16 @@
   strings, returns an array of integers sorted by the removed cipher"
   [shares]
   (let [sorted (sort-by last shares)
-        trimmed (map #(subs % 0 (dec (count %))) sorted)]
+        pruned (loop [[i & sharepos] sorted
+                      res []
+                      c 1    ]
+                 (let [pos (last i)
+                       res (conj res (if (= (str pos) (str c)) i (biginteger 0)))]
+                   (if (empty? sharepos) res
+                       (recur sharepos res (inc c)))))
+        trimmed (map #(subs % 0 (dec (count %))) pruned)]
     (map biginteger trimmed)))
+
+
+    ;;     trimmed (map #(subs % 0 (dec (count %))) sorted)]
+    ;; (map biginteger trimmed)))

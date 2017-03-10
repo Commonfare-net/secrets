@@ -67,7 +67,8 @@
          :secrets res}
         (recur slices res)))))
 
-(defn shares2slices
+
+(defn shares2numslices
   "Traverse shares vertically to harvest settings:total slices and
   returns a collection of integers."
   [shares]
@@ -79,7 +80,18 @@
                         (if (empty? secrets)
                           res
                           (recur secrets res))))]]
-    (if-not (empty? slice) (conj slice (inc slinum)))))
+    (conj slice (inc slinum))))
+
+(defn shares2slices
+  [shares]
+  (map ms/encode (shares2numslices shares)))
+
+(defn slice2seq
+  "Gets a sliced strings, decodes and orders them according to
+  position, then returns a sequence of integers"
+  [slice]
+  (ms/decode slice)
+)
 
 (defn shares2seq
   "Takes clear shares and returns a sequence"

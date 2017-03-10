@@ -3,17 +3,20 @@
   (:require  [fxc.core :refer :all]
              [fxc.random :as r]
              [fxc.secretshare :as ss]
-             [fxc.marshalling :as mm]
+             [fxc.marshalling :as ms]
              [hashids.core :as h]
              [clojure.pprint :as pp]))
 
 (pp/pprint {"------------------------------------------" "FXC_CORE_TESTS"})
 
+;; TODO: get some proper random
+(def salt (str (for [x (range 0 6)] (r/digit (Integer/MAX_VALUE)))))
 ;; generate a random secret
-(def secret (str (h/encode {:salt (str (r/digit (Integer/MAX_VALUE)))}
+(def secret (str (h/encode {:salt salt}
                            (for [x (range 0 3)] (r/digit (Integer/MAX_VALUE))))))
 
 (pp/pprint {:secret secret
+            :salt salt
             :seq (str2seq secret)})
 
 (def dyneseq (str2seq secret))
@@ -28,16 +31,20 @@
   (pp/pprint {:orig shares})
   (pp/pprint {:back back}))
 
-(fact "Seq to shares"
-      (shares2seq dyneshares) => dyneseq)
+(fact "Shares to seq"
+      (shares2seq dyneshares) => dyneseq
+      (seq2str (shares2seq dyneshares)) => secret)
 
-(def dyneslices (shares2slices dyneshares))
-(pp/pprint {:vertical_slices dyneslices})
+(def dynenumslices (shares2numslices dyneshares))
+(def dyneslices (map ms/encode dynenumslices))
+
+(pp/pprint {:vertical_slices dynenumslices})
 
 (fact "Vertical slices across secrets"
       (fact "are as many as the settings total"
-            (count dyneslices) => (:total settings))
-      (fact "are as many as the sequence of compressed integers (minus the lenght indicator)"
-            (count (first dyneslices)) => (count dyneseq)))
+            (count dynenumslices) => (:total settings))
+      (fact "are as many as the sequence of compressed integers"
+            (count (first dynenumslices)) => (count dyneseq)))
 
-(pp/pprint (map mm/encode dyneslices))
+(pp/pprint {:slices dyneslices
+            :1stseq (ms/decode (first dyneslices))})

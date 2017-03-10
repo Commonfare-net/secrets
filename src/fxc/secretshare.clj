@@ -110,7 +110,7 @@
            res []
            c 1]
 
-      (let [res (shamir-load header res c i)]
+      (let [res (if (= i 0) nil (shamir-load header res c i))]
         (if (empty? slices)
           (.getSecret
            (.combine (shamir-set-header header) res))
