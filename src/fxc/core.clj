@@ -45,9 +45,6 @@
    :length 6
    :entropy 3.1})
 
-
-
-
 (defn str2seq
   "Takes a string and returns a unique collection of big unsigned
   integers. First integer is the length of the original string."
@@ -78,7 +75,5 @@
     (let [res (conj res (ss/shamir-combine i))]
       (if (empty? slices) 
         (cons (:length s) res)
-          (recur slices res)))))
-
-         
+        (recur slices res)))))
 

@@ -106,17 +106,12 @@
   (let [header (:header secret)
         shares (:shares secret)]
 
-    (loop [res []
-           s (first shares)
+    (loop [[i & slices] shares
+           res []
            c 1]
 
-      ;; TODO: check off-by-one on this one
-
-      (if (< c (count shares))
-        (recur (shamir-load header res c s)
-               (nth shares c)
-               (inc c))
-        ;; else return
-        (.getSecret
-         (.combine (shamir-set-header header)
-                   (shamir-load header res c s)))))))
+      (let [res (shamir-load header res c i)]
+        (if (empty? slices)
+          (.getSecret
+           (.combine (shamir-set-header header) res))
+          (recur slices res (inc c)))))))
