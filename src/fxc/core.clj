@@ -57,7 +57,7 @@
   (ms/intseq2str (ic/decompress (ms/unsigned2int s))))
 
 (defn seq2shares
-  "Takes a sequence and computes clear shares of it"
+  "Takes a sequence and computes clear shares of it."
   [s]
   (loop [[i & slices] (drop 1 s)
          res []]
@@ -66,6 +66,20 @@
         {:length (first s)
          :secrets res}
         (recur slices res)))))
+
+(defn shares2slices
+  "Traverse shares vertically to harvest settings:total slices and
+  returns a collection of integers."
+  [shares]
+  (for [slinum (range 0 (:total settings))
+        :let [slice (loop [[verti & secrets] (:secrets shares)
+                           res[]]
+                      (let [num (nth (:shares verti) slinum)
+                            res (conj res num)]
+                        (if (empty? secrets)
+                          res
+                          (recur secrets res))))]]
+    (if-not (empty? slice) (conj slice (inc slinum)))))
 
 (defn shares2seq
   "Takes clear shares and returns a sequence"
