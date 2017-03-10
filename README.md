@@ -25,8 +25,9 @@ Secrets is written in Clojure and is fully cross-platform: one can run it locall
 
 The following software is required:
 
- - OpenJDK http://openjdk.java.net
- - Leiningen e Clojure http://leiningen.org
+ - [OpenJDK](http://openjdk.java.net)
+ - [Clojure](http://clojure.org)
+ - [Leiningen](http://leiningen.org)
 
 For instance on Devuan systems one can install all necessary dependencies via the following packages:
 
@@ -60,7 +61,7 @@ Based on the Shamir Secret Sharing algorithm by Adi Shamir
  - Shamir, Adi (1979), "How to share a secret", Communications of the ACM 22 (11): 612–613
  - Knuth, D. E. (1997), The Art of Computer Programming, II: Seminumerical Algorithms: 505
 
-Implemented using the Secret Share Java library by Tim Tiemens with a 4096 cyphers prime number.
+Implemented using the Secret Share Java library by Tim Tiemens with a 4096 ciphers prime number.
 
 Industry standards:
  - [ISO/IEC 19592-1:2016](https://www.iso.org/standard/65422.html) Information technology -- Security techniques -- Secret sharing -- Part 1: General
