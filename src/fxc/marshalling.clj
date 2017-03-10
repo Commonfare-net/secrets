@@ -22,11 +22,61 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (ns fxc.marshalling
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [hashids.core :as h]
+            [fxc.intcomp :as ic]))
 
-(defn parse-int [s]
-  (Integer. (re-find  #"\d+" s )))
 
+(def hashids-conf
+  {
+   ;; this alphabet excludes ambiguous chars:
+   ;; 1,0,I,O can be confused on some screens
+   :alphabet "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+   ;; the salt should be a secret shared password
+   ;; known to all possessors of the key pieces
+   :salt "La gatta sul tetto che scotta"
+   })
+
+
+
+;; TODO: verify this under fuzzying
+(defn int2unsigned
+  "takes a collection of integers and converts it to unsigned
+  notation, saves the first element which is just the length of the
+  original size before compression"
+  [i]
+  (cons (first i) (map #(+ (biginteger %) (Integer/MAX_VALUE)) (drop 1 i))))
+
+(defn unsigned2int
+  [i]
+  (cons (first i) (map #(- (biginteger %) (Integer/MAX_VALUE)) (drop 1 i))))
+
+(defn encode
+  "takes an intseq and encodes it with hashids"
+  [o]
+  (h/encode hashids-conf o))
+
+(defn decode
+  "takes an hash and decodes it with hashids"
+  [o] (h/decode hashids-conf o))
+
+;; (defn parse-int [s]
+;;   (Integer. (re-find  #"\d+" s )))
+
+(defn str2intseq
+  "takes a string and returns a sequence of integer ascii codes"
+  [s]
+  (map #(int %) (seq s)))
+
+(defn intseq2str
+  "takes a sequence of integer ascii codes and returns a string"
+  [s]
+  (apply str (map #(char %) s)))
+
+(defn intseq2bigint
+  "takes a sequence of integers and returns a big integer number"
+  [s]
+  (biginteger (apply str s)))
 
 (defn int2str-append-pos
   "add a final cipher to each number in the shares collection which

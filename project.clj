@@ -9,7 +9,8 @@
                  [com.tiemens/secretshare "1.4.2"]
                  [json-html "0.4.0"]
                  [formidable "0.1.10"]
-                 ]
+                 [jstrutz/hashids "1.0.1"]
+                 [me.lemire.integercompression/JavaFastPFOR "0.1.10"]]
 
   :jvm-opts ["-Djava.security.egd=file:/dev/random" ;use a proper random source
              "-XX:-OmitStackTraceInFastThrow" ; stacktrace JVM exceptions
