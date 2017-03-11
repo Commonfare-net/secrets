@@ -1,6 +1,7 @@
 (ns fxc.marshalling-test
   (:use midje.sweet)
   (:require [clojure.pprint :as pp]
+            [fxc.core :refer :all]
             [fxc.marshalling :as ms]
             [fxc.intcomp     :as ic ]))
 
@@ -48,13 +49,13 @@
       ))
 
 ;;(pp/pprint (map biginteger (seq (ic/compress dyneseq))))
-(pp/pprint {:encoded (ms/encode dyneseq)})
+(pp/pprint {:encoded (ms/encode-hash settings dyneseq)})
 ;;(pp/pprint (ms/encode (seq (ic/compress dyneseq))))
 (pp/pprint {:Integer/MAX_VALUE  Integer/MAX_VALUE})
 (pp/pprint {:unsigned (ms/int2unsigned (ic/compress dyneseq))})
 
 (pp/pprint
- (ms/encode (ms/int2unsigned (ic/compress dyneseq))))
+ (ms/encode-hash settings (ms/int2unsigned (ic/compress dyneseq))))
 
 (fact "Making all negative integers unsigned"
       ;; TODO: add a fuzzy test with very big integers
@@ -62,9 +63,13 @@
 
 (fact "Hashing integers"
       (fact "sequence back and forth"
-            (ms/decode (ms/encode dyneseq)) => dyneseq)
+            (ms/decode-hash settings
+                            (ms/encode-hash settings dyneseq)) => dyneseq)
       (fact "compressed back and forth"
-            (seq (ic/decompress (ms/unsigned2int (ms/decode
-                                                  (ms/encode (ms/int2unsigned (ic/compress dyneseq)))))))
+            (seq (ic/decompress
+                  (ms/unsigned2int
+                   (ms/decode-hash settings
+                              (ms/encode-hash settings
+                                         (ms/int2unsigned (ic/compress dyneseq)))))))
             => dyneseq))
 

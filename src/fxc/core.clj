@@ -41,6 +41,13 @@
 
    :type "WEB"
 
+   ;; this alphabet excludes ambiguous chars:
+   ;; 1,0,I,O can be confused on some screens
+   :alphabet "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+   ;; the salt should be a secret shared password
+   ;; known to all possessors of the key pieces
+   :salt "La gatta sul tetto che scotta"
+
    ;; random number generator settings
    :length 6
    :entropy 3.1})
@@ -111,7 +118,7 @@
   "Gets a sliced strings, decodes and orders them according to
   position, then returns a sequence of integers"
   [slice]
-  (ms/decode slice)
+  (ms/decode-hash slice)
   )
 
 (defn secrets2seq
@@ -138,11 +145,11 @@
                       (string? (first %))
                       (= (count %) (:total conf))]}
 
-  (map ms/encode (-> pass
-                     str2seq
-                     seq2secrets
-                     secrets2slices
-                     )))
+  (map #(ms/encode-hash settings %) (-> pass
+                                       str2seq
+                                       seq2secrets
+                                       secrets2slices
+                                       )))
 
 (defn decode
   "Takes a collection of strings and returns the original secret
@@ -152,7 +159,7 @@
                        (<= (count slices) (:total conf))]
                  :post [(string? %)]}
 
-  (-> (map ms/decode slices)
+  (-> (map #(ms/decode-hash settings %) slices)
       slices2secrets
       secrets2seq
       seq2str))

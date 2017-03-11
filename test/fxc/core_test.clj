@@ -34,8 +34,8 @@
             (seq2str (secrets2seq secrets)) => password))
 
 (def raw-slices (secrets2slices secrets))
-(def encoded-slices (map ms/encode raw-slices))
-(def decoded-slices (map ms/decode encoded-slices))
+(def encoded-slices (map #(ms/encode-hash settings %) raw-slices))
+(def decoded-slices (map #(ms/decode-hash settings %) encoded-slices))
 
 ;; (pp/pprint {:raw-slices raw-slices
 ;;             :encoded-slices encoded-slices
@@ -54,7 +54,7 @@
 (fact "Retrieve vertical secrets from horizontal slices"
       (def decoded-secrets (slices2secrets decoded-slices))
       decoded-secrets => secrets
-      (pp/pprint {:back-to-secrets decoded-secrets})
+      ;; (pp/pprint {:back-to-secrets decoded-secrets})
 
       (fact "then combine secrets into seq"
             (def decoded-seq (secrets2seq decoded-secrets))

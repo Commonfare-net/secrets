@@ -58,35 +58,9 @@
         (fact "PIN is retrieved from numeric scattered quorum shares"
               (ssss/shamir-combine settings s) => pin)
 
+        (fact "PIN is retrieved from numeric shuffled quorum shares"
+              (ssss/shamir-combine settings
+                                   (take (:quorum settings)
+                                         (shuffle rawsecrets))) => pin)
+
         ))
-
-(def secrets (ms/encode-shares rawsecrets))
-
-(def decoded-secrets (ms/decode-shares secrets))
-
-(pp/pprint {:encoded-secrets secrets
-            :decoded-secrets decoded-secrets})
-
-(fact "Encoded secrets are decoded correctly"
-
-      (fact "resulting in array of correct length"
-            (count decoded-secrets) => (:total settings))
-
-      (fact "combine correctly into the PIN"
-            (ssss/shamir-combine settings decoded-secrets) => pin)
-
-      )
-
-(fact "PIN can be recovered"
-      (let [f (ms/decode-shares (take-first-shares secrets))
-            l (ms/decode-shares (take-last-shares secrets))
-            s (ms/decode-shares (take-scatter-shares secrets))]
-        (fact "using first quorum shares"
-              (pp/pprint {:first_quorum f})
-              (ssss/shamir-combine settings f) => pin)
-        (fact "using last quorum shares"
-              (pp/pprint {:last_quorum l})
-              (ssss/shamir-combine settings l) => pin)
-        (fact "using scattered quorum shares"
-              (pp/pprint {:scatter_quorum s})
-              (ssss/shamir-combine settings s) => pin)))
