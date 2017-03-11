@@ -105,7 +105,7 @@
                           " shared secrets, quorum "
                           (:quorum settings) ":")]
                 [:ul (map #(conj [:li {:class "content"}] %) 
-                          (int2str-append-pos shares))]]]})))
+                          (encode-shares shares))]]]})))
 
 
   (GET "/r*" []
@@ -118,7 +118,7 @@
   (POST "/r*" {params :params}
     (web/render-page {:section "Recover PIN"
                       :body (let [para (fp/parse-params recovery-form-spec params)
-                              converted (str2int-trim-pos (vals para))]
+                              converted (decode-shares (vals para))]
                           (present/edn->html
                            {:0 (count converted)
                             :header settings

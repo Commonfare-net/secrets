@@ -70,17 +70,28 @@
   [si]
   (map (fn [_] (.getShare _)) si))
 
+(defn map-shares
+  "Takes a raw array of shares (big integers) and returns a
+  bidimensional array with numbered keys for positions"
+  [shares]
+  (loop [[s & share] shares
+         res []
+         c 1]
+    (let [res (conj res [c s])]
+      (if (empty? share) res
+          (recur share res (inc c))))))
+
 (defn shamir-split
   "split an integer into shares according to conf
   return a structure { :header { :quorum :total :prime :description}
-                       :shares [ integer vector of :total length] }"
+                       :shares [ [ pos share ] [ pos share] ... ]"
   [conf secnum]
   (let [si (.getShareInfos (.split (shamir-set-header conf) secnum))
         header (shamir-get-header (first si))
         shares (shamir-get-shares si)]
 
     {:header header
-     :shares (map biginteger shares)}))
+     :shares (map-shares shares)}))
 
 (defn shamir-load
   "Loads a new share into the Shamir's engine, internal use in combine"
@@ -96,22 +107,30 @@
 
 (defn shamir-combine
   "Takes a secret (header and collection of integers) and returns the
-  unlocked big integer"
+  unlocked big integer. The collection must be ordered and have a nil
+  in place for each missing share."
   [secret]
   {:pre [(contains? secret :header)
          (contains? secret :shares)
-         (coll? (:shares secret))]
+         (coll? (:shares secret))
+         (>= (count (:shares secret))
+             (get-in secret [:header :quorum]))]
+
    :post [(integer? %)]}
 
   (let [header (:header secret)
         shares (:shares secret)]
 
     (loop [[i & slices] shares
-           res []
-           c 1]
-
-      (let [res (if (= i 0) nil (shamir-load header res c i))]
+           res []]
+      (let [pos (biginteger (first i))
+            sh  (biginteger (second i))]
+            
         (if (empty? slices)
           (.getSecret
-           (.combine (shamir-set-header header) res))
-          (recur slices res (inc c)))))))
+           (.combine (shamir-set-header header)
+                     (if-not (nil? sh)
+                       (shamir-load header res pos sh) res)))
+          (recur slices
+                 (if-not (nil? sh)
+                   (shamir-load header res pos sh) res)))))))

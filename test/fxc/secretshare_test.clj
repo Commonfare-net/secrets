@@ -27,28 +27,45 @@
    :length 6
    :entropy 3.1})
 
-(fact "Secret Sharing unit tests"
+(defn take-first-shares
+  [shares]
+  (take (get-in shares [:header :quorum]) (:shares shares)))
+
+(defn take-last-shares
+  [shares]
+  (let [jump (- (get-in shares [:header :total])
+                (get-in shares [:header :quorum]))]
+    (drop jump (:shares shares))))
+
+(defn take-scatter-shares
+  [shares]
+  (let [sh (:shares shares)]
+    [(first sh) (nth sh 2) (nth sh 4)]))
+
+
       (def pin (:integer (rand/create (:length settings))))
 
-      (pp/pprint (str "PIN: " pin))
+(pp/pprint (str "PIN: " pin))
 
-      (pp/pprint settings)
+(pp/pprint settings)
 
-      (def numshares (ssss/shamir-split settings pin))
+(def rawsecrets (ssss/shamir-split settings pin))
 
-      (fact "PIN is split in numeric shares"
+(fact "PIN is split in numeric shares"
 
-      (let [a (:shares numshares)
-            f (take (:quorum settings) (:shares numshares))
-            l (cons (biginteger 0)
-                    (drop 1 (:shares numshares)))]
+      (let [a (:shares rawsecrets)
+            f (take-first-shares rawsecrets)
+            l (take-last-shares rawsecrets)
+            s (take-scatter-shares rawsecrets)]
         ;;(- (:total settings) (:quorum settings))
-        (pp/pprint {:all a
+        (pp/pprint {:rawsecrets rawsecrets
+                    :all a
                     :first f
-                    :last l})
+                    :last l
+                    :scat s})
 
         (fact "PIN is retrieved from all numeric shares"
-              (ssss/shamir-combine numshares) => pin)
+              (ssss/shamir-combine rawsecrets) => pin)
 
         (fact "PIN is retrieved from numeric first quorum shares"
               (ssss/shamir-combine
@@ -61,58 +78,55 @@
                {:header settings
                 :shares l})
               => pin)
+
+        (fact "PIN is retrieved from numeric scattered quorum shares"
+              (ssss/shamir-combine
+               {:header settings
+                :shares s})
+              => pin)
+
         ))
-      (def shares (int2str-append-pos (:shares numshares)))
 
-      (fact "Shares are marshalled into strings appending pos cipher"
-            (fact "results in array of correct length"
-                  (count marsh) => (:total settings))
-            (fact "each string has its position as last cipher"
-                  (loop [c 1 
-                         m (first marsh)]
-                    (if (< c (count marsh))
-                      (str (last m)) => (str c)
-                      (recur (inc c)
-                             (nth marsh (inc c))))))
-            (pp/pprint marsh))
+(def secrets {:header (:header rawsecrets)
+              :shares (encode-shares (:shares rawsecrets))})
 
-      (def back (str2int-trim-pos shares))
+(def decoded-secrets {:header (:header secrets)
+                      :shares (decode-shares (:shares secrets))})
 
-      (fact "Marshalled strings are converted to integers"
+(pp/pprint {:encoded-secrets secrets
+            :decoded-secrets decoded-secrets})
 
-            (fact "resulting in array of correct length"
-                  (count marsh) => (:total settings))
+(fact "Encoded secrets are decoded correctly"
 
-            (fact "combine correctly into the PIN"
-                  (ssss/shamir-combine
-                   {:header settings
-                    :shares (take (:quorum settings) back)}) => pin)
-            (pp/pprint back))
+      (fact "same header"
+            (:header secrets) => (:header decoded-secrets))
 
-      (fact "PIN can be recovered"
-            (let [f (take (:quorum settings) back)
-                  l (drop (- (:total settings) (:quorum settings)) back)
-                  s [(nth back 0) (nth back 2) (nth back 4)]]
-              (fact "using first quorum shares"
-                    (pp/pprint {:first_quorum f})
-                    (ssss/shamir-combine
-                     {:header settings
-                      :shares f}) => pin)
-              (fact "using last quorum shares"
-                    (pp/pprint {:last_quorum l})
-                    (ssss/shamir-combine
-                     {:header settings
-                      :shares l}) => pin)
-              (fact "using scattered quorum shares"
-                    (pp/pprint {:scatter_quorum s})
-                    (ssss/shamir-combine
-                     {:header settings
-                      :shares s}) => pin)))
-)
+      (fact "resulting in array of correct length"
+            (count (:shares decoded-secrets)) => (:total settings))
 
-(defn debug [state]
-  (clojure.pprint/pprint state)
-  state)
+      (fact "combine correctly into the PIN"
+            (ssss/shamir-combine decoded-secrets) => pin)
 
-(fact "Web integration tests (PIN)"
-)
+      )
+
+(fact "PIN can be recovered"
+      (let [f (decode-shares (take-first-shares secrets))
+            l (decode-shares (take-last-shares secrets))
+            s (decode-shares (take-scatter-shares secrets))]
+        (fact "using first quorum shares"
+              (pp/pprint {:first_quorum f})
+              (ssss/shamir-combine
+               {:header (:header decoded-secrets)
+                :shares f}) => pin)
+        (fact "using last quorum shares"
+              (pp/pprint {:last_quorum l})
+              (ssss/shamir-combine
+               {:header (:header decoded-secrets)
+                :shares l}) => pin)
+        (fact "using scattered quorum shares"
+              (pp/pprint {:scatter_quorum s})
+              (ssss/shamir-combine
+               {:header (:header decoded-secrets)
+                :shares s}) => pin)))
+
+

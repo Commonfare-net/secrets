@@ -78,33 +78,41 @@
   [s]
   (biginteger (apply str s)))
 
-(defn int2str-append-pos
+(defn encode-shares
   "add a final cipher to each number in the shares collection which
   indicates its position, returns an array of strings"
   [shares]
-  (loop [res []
-         s (first shares)
-         c 1]
-    (if (< c (count shares))
-      (recur (conj res (format "%d%d" s c))
-             (nth shares c)
-             (inc c))
-      (conj res (format "%d%d" s c)))))
+  {:pre [(coll? shares)]
+   :post [(coll? %)]}
+  (map encode shares))
 
-(defn str2int-trim-pos
+  ;; (loop [res []
+  ;;        s (first shares)
+  ;;        c 1]
+  ;;   (if (< c (count shares))
+  ;;     (recur (conj res (format "%d%d" s c))
+  ;;            (nth shares c)
+  ;;            (inc c))
+  ;;     (conj res (format "%d%d" s c)))))
+
+(defn decode-shares
   "remove the final cipher from each number in the collection of
   strings, returns an array of integers sorted by the removed cipher"
   [shares]
-  (let [sorted (sort-by last shares)
-        pruned (loop [[i & sharepos] sorted
-                      res []
-                      c 1    ]
-                 (let [pos (last i)
-                       res (conj res (if (= (str pos) (str c)) i (biginteger 0)))]
-                   (if (empty? sharepos) res
-                       (recur sharepos res (inc c)))))
-        trimmed (map #(subs % 0 (dec (count %))) pruned)]
-    (map biginteger trimmed)))
+  {:pre [(coll? shares)]
+   :post [(coll? %)]}
+  (sort-by first (map decode shares)))
+
+  ;; (let [sorted (sort-by last shares)
+  ;;       pruned (loop [[i & sharepos] sorted
+  ;;                     res []
+  ;;                     c 1    ]
+  ;;                (let [pos (last i)
+  ;;                      res (conj res (if (= (str pos) (str c)) i nil))]
+  ;;                  (if (empty? sharepos) res
+  ;;                      (recur sharepos res (inc c)))))
+  ;;       trimmed (map #(subs % 0 (dec (count %))) pruned)]
+  ;;   (map biginteger trimmed)))
 
 
     ;;     trimmed (map #(subs % 0 (dec (count %))) sorted)]
