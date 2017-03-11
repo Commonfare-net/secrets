@@ -1,4 +1,4 @@
-;; FXC - PIN Secret Sharingdigital  social currency toolkit
+;; FXC - Secret Sharing
 
 ;; part of Decentralized Citizen Engagement Technologies (D-CENT)
 ;; R&D funded by the European Commission (FP7/CAPS 610349)
@@ -26,107 +26,77 @@
             [compojure.route :as route]
 
             [hiccup.page :as page]
-            [fxc.form_helpers :as fh]
+
+            [fxc.core :refer :all]
             [fxc.webpage :as web]
+            [fxc.form_helpers :as fh]
+
             [formidable.parse :as fp]
             [formidable.core :as fc]
 
-            [fxc.secretshare :as ssss]
-            [fxc.random :as rand]
-            [fxc.fxc :as fxc]
-            [fxc.marshalling :refer :all]
             [json-html.core :as present]
             [hiccup.page :as page]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
-;; defaults
-(def settings
-  {:total (Integer. 5)
-   :quorum (Integer. 3)
-
-   :prime 'prime4096
-
-   :description "FXC v1 (Freecoin Secret Sharing)"
-
-   ;; versioning every secret
-   :protocol "FXC1"
-
-   :type "WEB"
-
-   ;; random number generator settings
-   :length 6
-   :entropy 3.1})
-
 
 (def generate-form-spec
   {:renderer :bootstrap3-stacked
-   :fields [{:name "PIN:"   :type :text}]
+   :fields [{:name "Secret:"   :type :text}]
    :validations [[:required [:field :value]]]
    :action "/generate"
    :method "post"})
 
 (def recovery-form-spec
   {:renderer :bootstrap3-stacked
-   :fields [{:name "1"  :type :integer}
-            {:name "2"  :type :text}
-            {:name "3"  :type :text}]
+   :fields [{:name "Share 1"  :type :integer}
+            {:name "Share 2"  :type :text}
+            {:name "Share 3"  :type :text}]
    :validations [[:required ["1" "2" "3"]]]
-                 
+
    :action "/recover"
    :method "post"})
-
-  
-           
-    
-          
 
 
 (defroutes app-routes
 
   (GET "/" []
       (web/render-page
-       {:section "Split PIN"
+       {:section "Split a Secret into Shares"
         :body [:div {:class "secrets row center"}
                [:div {:class "content input-form"}
                 (fc/render-form generate-form-spec)]]}))
 
   (POST "/g*" {params :params}
-    (let [pin    (biginteger (params "PIN:"))
-          shares (:shares (ssss/shamir-split settings pin))]
+    (let [pass   (params "Secret:")
+          shares (encode settings pass)]
 
       (web/render-page
-       {:section "Split PIN"
+       {:section "Split Secret"
         :body [:div {:class "secrets row center"}
                [:div {:class "password"}
-                "Your PIN:" [:div {:class "content"} pin]]
+                "Your Secret:" [:div {:class "content"} pass]]
 
                [:div {:class "slices"}
                 [:h3 (str "Split in " (:total settings)
                           " shared secrets, quorum "
                           (:quorum settings) ":")]
-                [:ul (map #(conj [:li {:class "content"}] %) 
-                          (encode-shares shares))]]]})))
+                [:ul (map #(conj [:li {:class "content"}] %)
+                          shares)]]]})))
 
 
   (GET "/r*" []
-    (web/render-page {:section "Recover PIN"
+    (web/render-page {:section "Recover a Shared Secret"
                       :body [:div {:class "recovery row center"}
                          [:div {:class "content input-form"}
                           (fc/render-form recovery-form-spec)
                           ]]}))
 
   (POST "/r*" {params :params}
-    (web/render-page {:section "Recover PIN"
+    (web/render-page {:section "Recover Secret"
                       :body (let [para (fp/parse-params recovery-form-spec params)
-                              converted (decode-shares (vals para))]
-                          (present/edn->html
-                           {:0 (count converted)
-                            :header settings
-                            :shares converted
-                            :result (ssss/shamir-combine 
-                                     (:header settings)
-                                     (:shares converted))
-                            }))}))
+                              converted (decode (vals para))]
+                          (present/edn->html converted))}))
+
   ;; TODO: detect cryptographical conversion error: returned is the first share
 
   (route/not-found "Not Found"))
