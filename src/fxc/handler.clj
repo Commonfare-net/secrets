@@ -123,9 +123,10 @@
                            {:0 (count converted)
                             :header settings
                             :shares converted
-                            :result (ssss/shamir-combine {:header settings
-                                                          :shares converted})
-                                               }))}))
+                            :result (ssss/shamir-combine 
+                                     (:header settings)
+                                     (:shares converted))
+                            }))}))
   ;; TODO: detect cryptographical conversion error: returned is the first share
 
   (route/not-found "Not Found"))

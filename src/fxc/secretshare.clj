@@ -90,8 +90,7 @@
         header (shamir-get-header (first si))
         shares (shamir-get-shares si)]
 
-    {:header header
-     :shares (map-shares shares)}))
+    (map-shares shares)))
 
 (defn shamir-load
   "Loads a new share into the Shamir's engine, internal use in combine"
@@ -109,28 +108,24 @@
   "Takes a secret (header and collection of integers) and returns the
   unlocked big integer. The collection must be ordered and have a nil
   in place for each missing share."
-  [secret]
-  {:pre [(contains? secret :header)
-         (contains? secret :shares)
-         (coll? (:shares secret))
-         (>= (count (:shares secret))
-             (get-in secret [:header :quorum]))]
+  [conf shares]
+  {:pre [(coll? shares)
+         (>= (count  shares)
+             (:quorum conf))]
 
    :post [(integer? %)]}
 
-  (let [header (:header secret)
-        shares (:shares secret)]
+  (loop [[i & slices] shares
+         res []]
+    (let [pos (biginteger (first i))
+          sh  (biginteger (second i))]
+      
+      (if (empty? slices)
+        (.getSecret
+         (.combine (shamir-set-header conf)
+                   (if-not (nil? sh)
+                     (shamir-load conf res pos sh) res)))
+        (recur slices
+               (if-not (nil? sh)
+                 (shamir-load conf res pos sh) res))))))
 
-    (loop [[i & slices] shares
-           res []]
-      (let [pos (biginteger (first i))
-            sh  (biginteger (second i))]
-            
-        (if (empty? slices)
-          (.getSecret
-           (.combine (shamir-set-header header)
-                     (if-not (nil? sh)
-                       (shamir-load header res pos sh) res)))
-          (recur slices
-                 (if-not (nil? sh)
-                   (shamir-load header res pos sh) res)))))))
