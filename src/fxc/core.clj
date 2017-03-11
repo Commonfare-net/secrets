@@ -93,19 +93,19 @@
   "Takes horizontal slices (decoded) and returns vertically aggregated
   secrets ready for processing by shamir-combine."
   [slices]
-  {:pre [(> (count slices) (:quorum settings))
+  {:pre [(>= (count slices) (:quorum settings))
          (integer? (first (last slices)))]
    :post [(coll? %)]}
   ;; iterate over the length of elements in slices
   ;; two is subtracted to remove the original pass len and position
   {:length (first (first slices))
    :secrets (for [c (range 1 (dec (count (first slices))))]
-              (loop [[s & sli] slices ;; TODO: sort
+              (loop [[s & sli] (sort-by last slices) ;; TODO: sort
                      res []  ]
                 (let [res (conj res [(last s) (nth s c)])]
                   (if (empty? sli) res
                       (recur sli res)))))})
-   
+
 
 (defn slice2seq
   "Gets a sliced strings, decodes and orders them according to
@@ -132,7 +132,12 @@
 (defn encode
   "Takes a string and returns multiple strings that can be used to
   retrieve the original according to settings."
-  [conf pass]
+  [conf pass] {:pre [(string? pass)
+                     (map? conf)]
+               :post [(coll? %)
+                      (string? (first %))
+                      (= (count %) (:total conf))]}
+
   (map ms/encode (-> pass
                      str2seq
                      seq2secrets
@@ -142,7 +147,11 @@
 (defn decode
   "Takes a collection of strings and returns the original secret
   according to the settings"
-  [conf slices]
+  [conf slices] {:pre [(coll? slices)
+                       (map? conf)
+                       (<= (count slices) (:total conf))]
+                 :post [(string? %)]}
+
   (-> (map ms/decode slices)
       slices2secrets
       secrets2seq

@@ -53,12 +53,15 @@
 
 (defn encode
   "takes an intseq and encodes it with hashids"
-  [o]
+  [o] {:pre  [(coll? o)]
+       :post [(string? %)]}
   (h/encode hashids-conf o))
 
 (defn decode
   "takes an hash and decodes it with hashids"
-  [o] (h/decode hashids-conf o))
+  [o] {:pre  [(string? o)]
+       :post [(coll? %)]}
+  (h/decode hashids-conf o))
 
 ;; (defn parse-int [s]
 ;;   (Integer. (re-find  #"\d+" s )))
@@ -86,15 +89,6 @@
    :post [(coll? %)]}
   (map encode shares))
 
-  ;; (loop [res []
-  ;;        s (first shares)
-  ;;        c 1]
-  ;;   (if (< c (count shares))
-  ;;     (recur (conj res (format "%d%d" s c))
-  ;;            (nth shares c)
-  ;;            (inc c))
-  ;;     (conj res (format "%d%d" s c)))))
-
 (defn decode-shares
   "remove the final cipher from each number in the collection of
   strings, returns an array of integers sorted by the removed cipher"
@@ -103,17 +97,3 @@
    :post [(coll? %)]}
   (sort-by first (map decode shares)))
 
-  ;; (let [sorted (sort-by last shares)
-  ;;       pruned (loop [[i & sharepos] sorted
-  ;;                     res []
-  ;;                     c 1    ]
-  ;;                (let [pos (last i)
-  ;;                      res (conj res (if (= (str pos) (str c)) i nil))]
-  ;;                  (if (empty? sharepos) res
-  ;;                      (recur sharepos res (inc c)))))
-  ;;       trimmed (map #(subs % 0 (dec (count %))) pruned)]
-  ;;   (map biginteger trimmed)))
-
-
-    ;;     trimmed (map #(subs % 0 (dec (count %))) sorted)]
-    ;; (map biginteger trimmed)))

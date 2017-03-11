@@ -54,7 +54,7 @@
 (fact "Retrieve vertical secrets from horizontal slices"
       (def decoded-secrets (slices2secrets decoded-slices))
       decoded-secrets => secrets
-      ;; (pp/pprint {:back-to-secrets decoded-secrets})
+      (pp/pprint {:back-to-secrets decoded-secrets})
 
       (fact "then combine secrets into seq"
             (def decoded-seq (secrets2seq decoded-secrets))
@@ -70,8 +70,13 @@
       (pp/pprint {:pub-encoded pub-encoded})
       (fact "work with all shares"
             (decode settings pub-encoded ) => password)
-      ;; (fact "work with shuffled shares"
-      ;;       (decode settings
-      ;;               (shuffle
-      ;;                (encode settings password) => password)))
+      (fact "work with shuffled shares"
+            (decode settings
+                    (shuffle
+                     (encode settings password))) => password)
+      (fact "work with minimum quorum"
+            (decode settings
+                    (take (:quorum settings)
+                          (shuffle (encode settings password)))) => password)
       )
+
