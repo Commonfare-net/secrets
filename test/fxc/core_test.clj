@@ -12,39 +12,37 @@
 ;; TODO: get some proper random
 (def salt (str (for [x (range 0 6)] (r/digit (Integer/MAX_VALUE)))))
 ;; generate a random secret
-(def secret (str (h/encode {:salt salt}
+(def password (str (h/encode {:salt salt}
                            (for [x (range 0 3)] (r/digit (Integer/MAX_VALUE))))))
 
-(pp/pprint {:secret secret
+(pp/pprint {:password password
             :salt salt
-            :seq (str2seq secret)})
+            :seq (str2seq password)})
 
-(def dyneseq (str2seq secret))
+(def intseq (str2seq password))
 
 (fact "String to seq"
-      (seq2str (str2seq secret)) => secret)
+      (seq2str intseq) => password)
 
-(def dyneshares (seq2shares dyneseq))
+(def secrets (seq2secrets intseq))
 
-(let [shares dyneshares
-      back (shares2seq shares)]
-  (pp/pprint {:orig shares})
-  (pp/pprint {:back back}))
+(fact "Seq to secrets"
+      (secrets2seq secrets) => intseq
+      (fact "Secrets to seq to password"
+            (seq2str (secrets2seq secrets)) => password))
 
-(fact "Shares to seq"
-      (shares2seq dyneshares) => dyneseq
-      (seq2str (shares2seq dyneshares)) => secret)
+(def raw-slices (secrets2numslices secrets))
+(def encoded-slices (map ms/encode raw-slices))
+(def decoded-slices (map ms/decode encoded-slices))
 
-(def dynenumslices (shares2numslices dyneshares))
-(def dyneslices (map ms/encode dynenumslices))
-
-(pp/pprint {:vertical_slices dynenumslices})
+(pp/pprint {:raw-slices raw-slices
+            :encoded-slices encoded-slices})
 
 (fact "Vertical slices across secrets"
       (fact "are as many as the settings total"
-            (count dynenumslices) => (:total settings))
+            (count raw-slices) => (:total settings))
       (fact "are as many as the sequence of compressed integers"
-            (count (first dynenumslices)) => (count dyneseq)))
+            (count (first raw-slices)) => (count intseq))
+      (fact "are decoded correctly to raw numeric format"
+            raw-slices => decoded-slices))
 
-(pp/pprint {:slices dyneslices
-            :1stseq (ms/decode (first dyneslices))})
