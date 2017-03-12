@@ -9,6 +9,7 @@
                  [com.tiemens/secretshare "1.4.2"]
                  [json-html "0.4.0"]
                  [formidable "0.1.10"]
+                 [markdown-clj "0.9.98"]
                  [jstrutz/hashids "1.0.1"]
                  [me.lemire.integercompression/JavaFastPFOR "0.1.10"]]
 

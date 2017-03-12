@@ -26,68 +26,96 @@
 
 (declare render-page)
 
+(defn render-head
+  ([] (render-head 
+       "Simple Secret Sharing" ;; default title
+       "Social management of secrets, free software by Dyne.org"
+       "https://secrets.dyne.org")) ;; default desc
+  
+  ([title desc url]
+   [:head [:meta {:charset "utf-8"}]
+    [:meta {:http-equiv "X-UA-Compatible" :content "IE=edge,chrome=1"}]
+    [:meta
+     {:name "viewport"
+      :content "width=device-width, initial-scale=1, maximum-scale=1"}]
+
+    ;; social stuff
+    [:meta {:name "description"  :content desc }]
+    [:meta {:property "og:title" :content title }]
+    [:meta {:property "og:description" :content desc }]
+    [:meta {:property "og:type" :content "website" }]
+    [:meta {:property "og:url" :content url }]
+    [:meta {:property "og:image" :content (str url "/static/img/secret_ladies.jpg") }]
+
+    [:meta {:name "twitter:card" :content "summary"}]
+    [:meta {:name "twitter:site" :content "@DyneOrg"}]
+    [:meta {:name "twitter:title" :content title }]
+    [:meta {:name "twitter:description" :content desc }]
+    [:meta {:name "twitter:image" :content (str url "/static/img/secret_ladies.jpg") }]
+
+    [:title title]
+    (page/include-css "/static/css/bootstrap.min.css")
+    (page/include-css "/static/css/bootstrap-theme.min.css")
+    (page/include-css "/static/css/gh-fork-ribbon.css")
+    (page/include-css "/static/css/json-html.css")
+    (page/include-css "/static/css/freecoin.css")]))
+
+(defn render-navbar []
+  [:nav {:class "navbar navbar-default navbar-static-top"}
+   [:div {:class "github-fork-ribbon-wrapper right"}
+    [:div {:class "github-fork-ribbon"}
+     [:a {:href "https://github.com/PIENews/secrets"} "Fork me!   :^)"]]]
+   [:div {:class "container"}
+    [:ul {:class "nav navbar-nav"}
+     [:li [:a {:href "/about"} "About Secrets"]]
+     [:li {:role "separator" :class "divider"} ]
+     [:li [:a {:href "/share"} "Share Secrets"
+           [:span {:class "sr-only"}"(current)"]]]
+     [:li [:a {:href "/combine"} "Combine Secrets" ]]
+     [:li {:role "separator" :class "divider"} ]
+     ]]])
+
+(defn render-footer []
+  [:footer {:style "margin-top: 3em"}
+   [:hr]
+   [:div {:class "pull-left footer"}
+    [:a {:href "https://www.dyne.org"}
+     [:img {:src "/static/img/software_by_dyne.png"
+            :alt   "Software by Dyne.org"
+            :title "Software by Dyne.org"}]]]
+   [:div {:class "pull-right footer"}
+    [:img {:src "static/img/AGPLv3.png" :style "margin-top: 3em"
+           :alt "Affero GPLv3 License"
+           :title "Affero GPLv3 License"} ]]])
+
+(defn render-static [body]
+  (page/html5 (render-head)
+              [:body {:class "fxc static"}
+
+               (render-navbar)
+
+               [:div {:class "container"} body]
+
+               (render-footer)
+               ]))
+
+
 (defn render-page [{:keys [section body] :as content}]
   (let [title "Simple Secret Sharing Service"
         desc "Social and decentralised management of passwords, free software by Dyne.org"
         url "https://secrets.dyne.org"]
 
     (page/html5
-     [:head [:meta {:charset "utf-8"}]
-      [:meta {:http-equiv "X-UA-Compatible" :content "IE=edge,chrome=1"}]
-      [:meta
-       {:name "viewport"
-        :content "width=device-width, initial-scale=1, maximum-scale=1"}]
 
-      ;; social stuff
-      [:meta {:name "description"  :content desc }]
-      [:meta {:property "og:title" :content title }]
-      [:meta {:property "og:description" :content desc }]
-      [:meta {:property "og:type" :content "website" }]
-      [:meta {:property "og:url" :content url }]
-      [:meta {:property "og:image" :content (str url "/static/img/secret_ladies.jpg") }]
+     (render-head)
 
-      [:meta {:name "twitter:card" :content "summary"}]
-      [:meta {:name "twitter:site" :content "@DyneOrg"}]
-      [:meta {:name "twitter:title" :content title }]
-      [:meta {:name "twitter:description" :content desc }]
-      [:meta {:name "twitter:image" :content (str url "/static/img/secret_ladies.jpg") }]
-
-      [:title title]
-      (page/include-css "/static/css/bootstrap.min.css")
-      (page/include-css "/static/css/bootstrap-theme.min.css")
-      (page/include-css "/static/css/gh-fork-ribbon.css")
-      (page/include-css "/static/css/json-html.css")
-      (page/include-css "/static/css/freecoin.css")]
-     [:body {:class "fxc"}
-      [:div {:class "github-fork-ribbon-wrapper right"}
-       [:div {:class "github-fork-ribbon"}
-        [:a {:href "https://github.com/PIENews/secrets"} "Fork me!   :^)"]]]
-
-      [:nav {:class "navbar navbar-default navbar-static-top"}
-       [:div {:class "container"}
-        [:ul {:class "nav navbar-nav"}
-         [:li [:a {:href "https://github.com/PIENews/secrets"} "About Secrets"]]
-         [:li {:role "separator" :class "divider"} ]
-         [:li [:a {:href "/"} "Split Secret"
-               [:span {:class "sr-only"}"(current)"]]]
-         [:li [:a {:href "/recover"} "Recover Secret" ]]
-         [:li {:role "separator" :class "divider"} ]
-         ]]]
+     (render-navbar)
 
       [:div {:class "container"}
        [:img {:src "/static/img/secret_ladies.jpg" :class "pull-right img-responsive" :style "width: 16em; border:1px solid #010a40"}]
        [:h1 "Simple Secret Sharing Service" ]
        [:h2 "Social and decentralised management of passwords"]
        [:h3 section]
-       body
+       body]
 
-       [:footer {:style "margin-top: 3em"}
-        [:hr]
-        [:div {:class "pull-left footer"}
-         [:a {:href "https://www.dyne.org"} [:img {:src "/static/img/software_by_dyne.png"
-                                                   :alt   "Software by Dyne.org"
-                                                   :title "Software by Dyne.org"}]]]
-        [:div {:class "pull-right footer"}
-         [:img {:src "static/img/AGPLv3.png" :style "margin-top: 3em"
-                :alt "Affero GPLv3 License" :title "Affero GPLv3 License"} ]]
-        ]]])))
+      (render-footer))))

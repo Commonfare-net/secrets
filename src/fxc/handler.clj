@@ -22,7 +22,8 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (ns fxc.handler
-  (:require [compojure.core :refer :all]
+  (:require [clojure.java.io :as io]
+            [compojure.core :refer :all]
             [compojure.route :as route]
 
             [hiccup.page :as page]
@@ -34,6 +35,7 @@
             [formidable.parse :as fp]
             [formidable.core :as fc]
 
+            [markdown.core :as md]
             [json-html.core :as present]
             [hiccup.page :as page]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
@@ -43,7 +45,7 @@
   {:renderer :bootstrap3-stacked
    :fields [{:name "Secret:"   :type :text}]
    :validations [[:required [:field :value]]]
-   :action "/generate"
+   :action "/share"
    :method "post"})
 
 (def recovery-form-spec
@@ -53,7 +55,7 @@
             {:name "Share 3"  :type :text}]
    :validations [[:required ["Share 1" "Share 2" "Share 3"]]]
 
-   :action "/recover"
+   :action "/combine"
    :method "post"})
 
 
@@ -64,13 +66,25 @@
 (defroutes app-routes
 
   (GET "/" []
+       (web/render-static
+        (md/md-to-html-string
+         (slurp (io/resource "public/static/README.md")))))
+
+  (GET "/about" []
+       (web/render-static
+        (md/md-to-html-string
+         (slurp (io/resource "public/static/README.md")))))
+
+
+  (GET "/share" []
       (web/render-page
        {:section "Split a Secret into Shares"
-        :body [:div {:class "secrets row center"}
-               [:div {:class "content input-form"}
-                (fc/render-form generate-form-spec)]]}))
+        :body
+        [:div {:class "secrets row center"}
+         [:div {:class "content input-form"}
+          (fc/render-form generate-form-spec)]]}))
 
-  (POST "/g*" {params :params}
+  (POST "/share" {params :params}
         ;; take only a max of 32 chars, else truncate
     (let [pass   (trunc 32 (params "Secret:"))
           shares (encode settings pass)]
@@ -89,14 +103,14 @@
                           shares)]]]})))
 
 
-  (GET "/r*" []
+  (GET "/combine" []
     (web/render-page {:section "Recover a Shared Secret"
                       :body [:div {:class "recovery row center"}
                          [:div {:class "content input-form"}
                           (fc/render-form recovery-form-spec)
                           ]]}))
 
-  (POST "/r*" {params :params}
+  (POST "/combine" {params :params}
     (web/render-page {:section "Recover Secret"
                       :body (let [para (fp/parse-params recovery-form-spec params)
                                   converted
