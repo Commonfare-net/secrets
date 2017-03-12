@@ -51,11 +51,15 @@
    :fields [{:name "Share 1"  :type :integer}
             {:name "Share 2"  :type :text}
             {:name "Share 3"  :type :text}]
-   :validations [[:required ["1" "2" "3"]]]
+   :validations [[:required ["Share 1" "Share 2" "Share 3"]]]
 
    :action "/recover"
    :method "post"})
 
+
+(defn trunc
+  [n s]
+  (subs s 0 (min (count s) n)))
 
 (defroutes app-routes
 
@@ -67,7 +71,8 @@
                 (fc/render-form generate-form-spec)]]}))
 
   (POST "/g*" {params :params}
-    (let [pass   (params "Secret:")
+        ;; take only a max of 32 chars, else truncate
+    (let [pass   (trunc 32 (params "Secret:"))
           shares (encode settings pass)]
 
       (web/render-page
@@ -94,8 +99,13 @@
   (POST "/r*" {params :params}
     (web/render-page {:section "Recover Secret"
                       :body (let [para (fp/parse-params recovery-form-spec params)
-                              converted (decode (vals para))]
-                          (present/edn->html converted))}))
+                                  converted
+                                  (decode settings
+                                          (map #(trunc 128 %) (vals para)))]
+                              [:div {:class "password"}
+                               "Your Secret: "
+                               [:div {:class "content"} converted]])}))
+
 
   ;; TODO: detect cryptographical conversion error: returned is the first share
 

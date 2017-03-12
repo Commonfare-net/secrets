@@ -27,7 +27,7 @@
 (pp/pprint {:compressed (ic/compress dyneseq)})
 ;; (pp/pprint (ic/compress (ic/codec.binpack) dyneseq))
 (pp/pprint (conj {:0 "Confirming FastPFOR128 is default, this should return same values"}
-                 (ic/compress (ic/codec.pfor128) (ms/str2intseq dyneseq))))
+                 (ic/compress (ic/codec.pfor128) dyneseq)))
 
 (fact "Compressing integers"
       (fact "back and forth"

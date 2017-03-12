@@ -33,11 +33,13 @@
   "takes a collection of integers and converts it to unsigned
   notation, saves the first element which is just the length of the
   original size before compression"
-  [i]
+  [i] {:pre [(coll? i)]
+       :post [(coll? i)]}
   (cons (first i) (map #(+ (biginteger %) (Integer/MAX_VALUE)) (drop 1 i))))
 
 (defn unsigned2int
-  [i]
+  [i] {:pre [(coll? i)]
+       :post [(coll? i)]}
   (cons (first i) (map #(- (biginteger %) (Integer/MAX_VALUE)) (drop 1 i))))
 
 (defn encode-hash
@@ -57,12 +59,14 @@
 
 (defn str2intseq
   "takes a string and returns a sequence of integer ascii codes"
-  [s]
+  [s] {:pre [(string? s)]
+       :post [(coll? %)]}
   (map #(int %) (seq s)))
 
 (defn intseq2str
   "takes a sequence of integer ascii codes and returns a string"
-  [s]
+  [s] {:pre [(coll? s)]
+       :post [(string? %)]}
   (apply str (map #(char %) s)))
 
 ;; internal functions
