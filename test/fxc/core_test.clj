@@ -19,21 +19,21 @@
             :salt salt})
 ;;            :seq (str2seq password)})
 
-(def intseq (str2seq password))
+(def intseq (ms/str2seq password))
 
 (fact "String to seq"
-      (seq2str intseq) => password)
+      (ms/seq2str intseq) => password)
 
-(def secrets (seq2secrets intseq))
+(def secrets (ms/seq2secrets settings intseq))
 
 ;; (pp/pprint {:secrets secrets})
 
 (fact "Seq to secrets"
-      (secrets2seq secrets) => intseq
+      (ms/secrets2seq settings secrets) => intseq
       (fact "Secrets to seq to password"
-            (seq2str (secrets2seq secrets)) => password))
+            (ms/seq2str (ms/secrets2seq settings secrets)) => password))
 
-(def raw-slices (secrets2slices secrets))
+(def raw-slices (ms/secrets2slices settings secrets))
 (def encoded-slices (map #(ms/encode-hash settings %) raw-slices))
 (def decoded-slices (map #(ms/decode-hash settings %) encoded-slices))
 
@@ -52,18 +52,18 @@
 
 
 (fact "Retrieve vertical secrets from horizontal slices"
-      (def decoded-secrets (slices2secrets decoded-slices))
+      (def decoded-secrets (ms/slices2secrets settings decoded-slices))
       decoded-secrets => secrets
       ;; (pp/pprint {:back-to-secrets decoded-secrets})
 
       (fact "then combine secrets into seq"
-            (def decoded-seq (secrets2seq decoded-secrets))
+            (def decoded-seq (ms/secrets2seq settings decoded-secrets))
             decoded-seq => intseq)
 
       (fact "then retrieve the password"
-            (def decoded-password (seq2str decoded-seq))
+            (def decoded-password (ms/seq2str decoded-seq))
             (pp/pprint {:decoded-password decoded-password})
-            (seq2str decoded-seq) => password))
+            (ms/seq2str decoded-seq) => password))
       
 (fact "Public fxc codec functions"
       (def pub-encoded (encode settings password))

@@ -71,9 +71,7 @@
          [:li [:a {:href "/"} "Split PIN" [:span {:class "sr-only"}"(current)"]]]
          [:li [:a {:href "/recover"} "Recover PIN" ]]
          [:li {:role "separator" :class "divider"} ]
-         [:p {:class "navbar-text"} [:i "...work in progress:" ]]
-         [:p {:class "navbar-text"} [:i "Generate Password"]]
-         [:p {:class "navbar-text"} [:i "Recover Password"]]]]]
+         ]]]
 
       [:div {:class "container"}
        [:img {:src "/static/img/secret_ladies.jpg" :class "pull-right img-responsive" :style "width: 16em; border:1px solid #010a40"}]

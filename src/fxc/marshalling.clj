@@ -24,7 +24,8 @@
 (ns fxc.marshalling
   (:require [clojure.string :as str]
             [hashids.core :as h]
-            [fxc.intcomp :as ic]))
+            [fxc.intcomp :as ic]
+            [fxc.secretshare :as ss]))
 
 
 ;; TODO: verify this under fuzzying
@@ -63,3 +64,86 @@
   "takes a sequence of integer ascii codes and returns a string"
   [s]
   (apply str (map #(char %) s)))
+
+;; internal functions
+
+
+(defn str2seq
+  "Takes a string and returns a unique collection of big unsigned
+  integers. First integer is the length of the original string."
+  [s]
+  {:pre [(string? s)]
+   :post [(coll? %)]}
+  (int2unsigned (ic/compress (str2intseq s))))
+
+(defn seq2str
+  "Takes a collection of big unsigned integers and returns a string."
+  [s] {:pre [(coll? s)]
+       :post [(string? %)]}
+  (intseq2str (ic/decompress (unsigned2int s))))
+
+(defn seq2secrets
+  "Takes a sequence and computes secrets."
+  [conf s] {:pre  [(coll? s)]
+       :post [(coll? %)]}
+  (loop [[i & slices] (drop 1 s)
+         res []]
+    (let [res (conj res (ss/shamir-split conf (biginteger i)))]
+      (if (empty? slices)
+        {:length (first s)
+         :secrets res}
+        (recur slices res)))))
+
+
+(defn secrets2slices
+  "Traverse secrets horizontally to harvest settings:total slices and
+  returns a collection of integers."
+  [conf secrets]
+  (for [slinum (range 0 (:total conf))
+        :let [slice (loop [[verti & slices] (:secrets secrets)
+                           res[]]
+                      (let [num (second (nth verti slinum))
+                            res (conj res num)]
+                        (if (empty? slices)
+                          res
+                          (recur slices res))))]]
+    (cons (:length secrets) (conj slice (inc slinum)))))
+
+(defn slices2secrets
+  "Takes horizontal slices (decoded) and returns vertically aggregated
+  secrets ready for processing by shamir-combine."
+  [conf slices]
+  {:pre [(>= (count slices) (:quorum conf))
+         (integer? (first (last slices)))]
+   :post [(coll? %)]}
+  ;; iterate over the length of elements in slices
+  ;; two is subtracted to remove the original pass len and position
+  {:length (first (first slices))
+   :secrets (for [c (range 1 (dec (count (first slices))))]
+              (loop [[s & sli] (sort-by last slices) ;; TODO: sort
+                     res []  ]
+                (let [res (conj res [(last s) (nth s c)])]
+                  (if (empty? sli) res
+                      (recur sli res)))))})
+
+
+(defn slice2seq
+  "Gets a sliced strings, decodes and orders them according to
+  position, then returns a sequence of integers"
+  [slice]
+  (decode-hash slice)
+  )
+
+(defn secrets2seq
+  "Takes clear shares and returns a sequence"
+  [conf s]
+  (loop [[i & slices] (:secrets s)
+         res []]
+    (let [res (conj res (ss/shamir-combine conf i))]
+      (if (empty? slices)
+        (cons (:length s) res)
+        (recur slices res)))))
+
+
+
+
