@@ -25,6 +25,8 @@
   (:require [clojure.java.io :as io]
             [cheshire.core :refer :all]))
 
+(declare config-read)
+
 (defn config-read
   "read configurations from standard locations, overriding defaults or
   system-wide with user specific paths."

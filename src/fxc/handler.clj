@@ -30,6 +30,7 @@
 
             [fxc.core :refer :all]
             [fxc.webpage :as web]
+            [fxc.config :refer :all]
             [fxc.form_helpers :as fh]
 
             [formidable.parse :as fp]
@@ -92,15 +93,16 @@
             (web/render-static (web/render-error input))
             ;; take only a max of 32 chars, else truncate
             (let [pass   (trunc 32 (get-in input [:data :secret]))
-                  shares (encode settings pass)]
+                  conf (config-read settings)
+                  shares (encode conf pass)]
 
             (web/render-page
              {:section "Secret shared succesfully"
               :body [:div {:class "secrets row center"}
                      [:div {:class "slices"}
-                      [:h3 (str "Split to " (:total settings)
+                      [:h3 (str "Split to " (:total conf)
                                 " shared secrets, quorum "
-                                (:quorum settings) ":")]
+                                (:quorum conf) ":")]
                       [:ul (map #(conj [:li {:class "content"}] %)
                                 shares)]]]})))))
 
@@ -113,14 +115,15 @@
                           ]]}))
 
   (POST "/combine" {params :params}
-        (let [input (fh/validate-form recovery-form-spec params)]
+        (let [input (fh/validate-form recovery-form-spec params)
+              conf (config-read settings)]
           (if (= (:status input) :error)
             (web/render-static (web/render-error input))
             (web/render-page
              {:section "Secret recovered succesfully"
               :body (let [para (:data input)
                           converted
-                          (decode settings
+                          (decode conf
                                   (map #(trunc 256 %) (vals para)))]
                       [:div {:class "password"}
                        "Your Secret: "
