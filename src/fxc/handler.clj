@@ -128,6 +128,9 @@
                       [:div {:class "password"}
                        "Your Secret: "
                        [:div {:class "content"} converted]])}))))
+  (GET "/config" []
+       (web/render-static (present/edn->html (config-read settings))))
+
   ;; TODO: detect cryptographical conversion error: returned is the first share
 
   (route/not-found "Not Found"))
