@@ -80,7 +80,7 @@
    [:hr]
    [:div {:class "pull-left footer"}
     [:a {:href "https://www.dyne.org"}
-     [:img {:src "/static/img/software_by_dyne.png"
+     [:img {:src "/static/img/swbydyne.png"
             :alt   "Software by Dyne.org"
             :title "Software by Dyne.org"}]]]
    [:div {:class "pull-right footer"}

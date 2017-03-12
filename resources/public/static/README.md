@@ -10,7 +10,9 @@
 
 <h2>Demo: <a href="https://secrets.dyne.org/share">secrets.dyne.org/share</a></h2>
 
-[![secrets.dyne.org](https://secrets.dyne.org/static/img/secret_ladies.jpg)](https://secrets.dyne.org)
+<a href="https://secrets.dyne.org/share">
+	<img src="https://secrets.dyne.org/static/img/secret_ladies.jpg"
+		title="try it online" alt="use secrets online" style="overflow: hidden">
 
 [![Build Status](https://travis-ci.org/PIENews/secrets.svg?branch=master)](https://travis-ci.org/PIENews/secrets)
 
@@ -29,7 +31,7 @@ Secrets uses the underlying "FXC" cryptographic protocol developed in [Freecoin]
 
 Secrets is written in Clojure and is fully cross-platform: one can run it locally on a GNU/Linux machine, as well on Apple/OSX and MS/Windows.
 
-<img class="pull-left" src="http://leiningen.org/img/leiningen.jpg"
+<img class="pull-left" src="http://secrets.dyne.org/static/img/leiningen.jpg"
 	style="padding-right: 1.5em">
 
 The following software is required: [OpenJDK](http://openjdk.java.net), [Clojure](http://clojure.org), [Leiningen](http://leiningen.org).

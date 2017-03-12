@@ -1,3 +1,24 @@
+@font-face { font-family: 'granjon';
+			 src: url('granjon.woff') format('woff'); }
+
+body {
+	font-family: "granjon";
+	font-size: 2em;
+
+}
+
+h1, h2, h3, h4 {
+	font-family: "granjon"
+}
+
+p {
+	font-family: "granjon"
+}
+
+img {
+	overflow: hidden;
+}
+
 li {
     padding: .5em;
 }
