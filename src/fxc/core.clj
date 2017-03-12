@@ -31,7 +31,7 @@
 
    :prime 'prime4096
 
-   :description "FXC v1 (Freecoin Secret Sharing)"
+   :description "FXC v1 (Simple Secret Sharing, Freecoin component)"
 
    ;; versioning every secret
    :protocol "FXC1"

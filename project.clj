@@ -1,10 +1,10 @@
 (defproject fxc "0.1.0-SNAPSHOT"
-  :description "FXC shared secret server"
-  :url "http://fxc.io"
+  :description "FXC simple secret sharing library"
+  :url "https://secrets.dyne.org"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [compojure "1.5.1"]
-                 [ring/ring-defaults "0.2.1"]
+                 [compojure "1.5.2"]
+                 [ring/ring-defaults "0.2.3"]
                  [org.clojure/math.numeric-tower "0.0.4"]
                  [com.tiemens/secretshare "1.4.2"]
                  [json-html "0.4.0"]

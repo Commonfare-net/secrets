@@ -1,10 +1,12 @@
 # Secrets
 
-Simple Secret Sharing Service for social and decentralised management of passwords
+Simple Secret Sharing Service for social and decentralised management of passwords.
 
 [![software by Dyne.org](https://www.dyne.org/wp-content/uploads/2015/12/software_by_dyne.png)](http://www.dyne.org)
 
-Free and fully functional demo on [secrets.dyne.org](https://secrets.dyne.org)
+Free and fully functional demo:
+[secrets.dyne.org](https://secrets.dyne.org)
+[![secrets.dyne.org](https://secrets.dyne.org/static/img/secret_ladies.jpg)](https://secrets.dyne.org)
 
 [![Build Status](https://travis-ci.org/PIENews/secrets.svg?branch=master)](https://travis-ci.org/PIENews/secrets)
 
@@ -53,27 +55,27 @@ This command will open a browser pointing on the service running on localhost po
 
 To start only a web server for the application, but no browser, run: `server-headless`
 
-## Specs
+## Acknowledgments
 
-Secrets development is based on research made by the [D-CENT project](http://dcentproject.eu) (Decentralized Citizen Engagement Technologies), R&D funded by the European Commission (FP7/CAPS 610349).
+Secrets is Free and Open Source research and development activity funded by the European Commission in the context of the [Collective Awareness Platforms for Sustainability and Social Innovation (CAPSSI)](https://ec.europa.eu/digital-single-market/en/collective-awareness) program. It was developed within the [Decentralised Citizen Engagement Technologies](http://dcentproject.eu) project (grant nr.610349) and further adopted and maintained by the [Commonfare](http://pieproject.eu) project (grant nr.687922).
 
-Based on the Shamir Secret Sharing algorithm by Adi Shamir
+The [Secret Sharing](https://en.wikipedia.org/wiki/Secret_sharing) algorithm adopted is based on [Shamir's Secret Sharing](https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing), references:
  - Shamir, Adi (1979), "How to share a secret", Communications of the ACM 22 (11): 612–613
  - Knuth, D. E. (1997), The Art of Computer Programming, II: Seminumerical Algorithms: 505
+The implementation used is by Tim Tiemens with a 4096 cipher prime number.
 
-Implemented using the Secret Share Java library by Tim Tiemens with a 4096 ciphers prime number.
+The Integer Compression algorithm used internally is the `FastPFOR128` by Daniel Lemire, see: Lemire, D. and Boytsov, L. "[Decoding billions of integers per second through vectorization](http://arxiv.org/abs/1209.2137)" (2015).
 
-Industry standards:
- - [ISO/IEC 19592-1:2016](https://www.iso.org/standard/65422.html) Information technology -- Security techniques -- Secret sharing -- Part 1: General
- - [ISO/IEC FDIS 19592-2 (Under development)](https://www.iso.org/standard/65425.html)  Information technology -- Security techniques -- Secret sharing -- Part 2: Fundamental mechanisms
-
+Industry standard addressed: Information technology -- Security techniques -- Secret sharing
+ - [ISO/IEC 19592-1:2016](https://www.iso.org/standard/65422.html) (Part 1: General)
+ - [ISO/IEC FDIS 19592-2 (Under development)](https://www.iso.org/standard/65425.html) (Part 2: Fundamental mechanisms)
 
 
 ## License
 
 Secrets is Copyright (C) 2015-2017 by the Dyne.org Foundation
 
-Software Designed, written and maintained by Denis Roio <jaromil@dyne.org>
+Secrets and the FXC "simple secret sharing" protocol and library are designed, written and maintained by Denis Roio <jaromil@dyne.org>
 
 ```
 This program is free software: you can redistribute it and/or modify
