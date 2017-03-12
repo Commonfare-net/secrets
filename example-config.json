@@ -1,0 +1,12 @@
+{
+  "salt" : "La gatta sul tetto che scotta",
+  "description" : "FXC v1 (Simple Secret Sharing, Freecoin component)",
+  "protocol" : "FXC1",
+  "alphabet" : "ABCDEFGHJKLMNPQRSTUVWXYZ23456789",
+  "quorum" : 3,
+  "prime" : "prime4096",
+  "type" : "WEB",
+  "total" : 5,
+  "length" : 6,
+  "entropy" : 3.1
+}
