@@ -25,6 +25,12 @@
   (:require [hiccup.page :as page]))
 
 (declare render-page)
+(declare render-error)
+(declare render-static)
+
+(defn render-error
+  ([]   [:div [:h1 "Error:"] [:h2 "Unknown"]])
+  ([in] [:div [:h1 "Error:"] [:h2 (drop 1 in)]]))
 
 (defn render-head
   ([] (render-head 

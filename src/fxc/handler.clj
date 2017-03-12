@@ -43,18 +43,20 @@
 
 (def generate-form-spec
   {:renderer :bootstrap3-stacked
-   :fields [{:name "Secret:"   :type :text}]
-   :validations [[:required [:field :value]]]
+   :fields [{:name :secret  :type :password :datatype :string}
+            {:name :confirm  :type :password :datatype :string}]
+   :validations [[:required [:secret :confirm]]
+                 [:max-length 32 :secret]
+                 [:equal [:secret :confirm]]]
    :action "/share"
    :method "post"})
 
 (def recovery-form-spec
   {:renderer :bootstrap3-stacked
-   :fields [{:name "Share 1"  :type :integer}
-            {:name "Share 2"  :type :text}
-            {:name "Share 3"  :type :text}]
-   :validations [[:required ["Share 1" "Share 2" "Share 3"]]]
-
+   :fields [{:name :share_1  :type :text :datatype :string}
+            {:name :share_2  :type :text :datatype :string}
+            {:name :share_3  :type :text :datatype :string}]
+   :validations [[:required [:share_1 :share_2 :share_3]]]
    :action "/combine"
    :method "post"})
 
@@ -67,8 +69,8 @@
 
   (GET "/" []
        (web/render-static
-        (md/md-to-html-string
-         (slurp (io/resource "public/static/README.md")))))
+         (md/md-to-html-string
+          (slurp (io/resource "public/static/README.md")))))
 
   (GET "/about" []
        (web/render-static
@@ -78,49 +80,51 @@
 
   (GET "/share" []
       (web/render-page
-       {:section "Split a Secret into Shares"
+       {:section "Share a Secret to 5 pieces (quorum 3)"
         :body
         [:div {:class "secrets row center"}
          [:div {:class "content input-form"}
           (fc/render-form generate-form-spec)]]}))
 
   (POST "/share" {params :params}
-        ;; take only a max of 32 chars, else truncate
-    (let [pass   (trunc 32 (params "Secret:"))
-          shares (encode settings pass)]
+        (let [input (fh/validate-form generate-form-spec params)]
+          (if (= (:status input) :error)
+            (web/render-static (web/render-error input))
+            ;; take only a max of 32 chars, else truncate
+            (let [pass   (trunc 32 (get-in input [:data :secret]))
+                  shares (encode settings pass)]
 
-      (web/render-page
-       {:section "Split Secret"
-        :body [:div {:class "secrets row center"}
-               [:div {:class "password"}
-                "Your Secret:" [:div {:class "content"} pass]]
-
-               [:div {:class "slices"}
-                [:h3 (str "Split in " (:total settings)
-                          " shared secrets, quorum "
-                          (:quorum settings) ":")]
-                [:ul (map #(conj [:li {:class "content"}] %)
-                          shares)]]]})))
+            (web/render-page
+             {:section "Secret shared succesfully"
+              :body [:div {:class "secrets row center"}
+                     [:div {:class "slices"}
+                      [:h3 (str "Split to " (:total settings)
+                                " shared secrets, quorum "
+                                (:quorum settings) ":")]
+                      [:ul (map #(conj [:li {:class "content"}] %)
+                                shares)]]]})))))
 
 
   (GET "/combine" []
-    (web/render-page {:section "Recover a Shared Secret"
+    (web/render-page {:section "Combine a Shared Secret"
                       :body [:div {:class "recovery row center"}
                          [:div {:class "content input-form"}
                           (fc/render-form recovery-form-spec)
                           ]]}))
 
   (POST "/combine" {params :params}
-    (web/render-page {:section "Recover Secret"
-                      :body (let [para (fp/parse-params recovery-form-spec params)
-                                  converted
-                                  (decode settings
-                                          (map #(trunc 128 %) (vals para)))]
-                              [:div {:class "password"}
-                               "Your Secret: "
-                               [:div {:class "content"} converted]])}))
-
-
+        (let [input (fh/validate-form recovery-form-spec params)]
+          (if (= (:status input) :error)
+            (web/render-static (web/render-error input))
+            (web/render-page
+             {:section "Secret recovered succesfully"
+              :body (let [para (:data input)
+                          converted
+                          (decode settings
+                                  (map #(trunc 256 %) (vals para)))]
+                      [:div {:class "password"}
+                       "Your Secret: "
+                       [:div {:class "content"} converted]])}))))
   ;; TODO: detect cryptographical conversion error: returned is the first share
 
   (route/not-found "Not Found"))
