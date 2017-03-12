@@ -40,11 +40,13 @@
             res default ]
        (let [res (merge res
                         (if (.exists (io/as-file p))
-                          (parse-stream (io/reader p))))]
+                          (parse-stream (io/reader p) true)))]
          (if (empty? paths) res
              (recur paths res)))))))
 
 (defn config-write
   "write configurations to file"
   [conf file]
-  (generate-stream conf (io/writer file) {:pretty true}))
+  (generate-stream conf (io/writer file)
+                   {:pretty true}))
+
