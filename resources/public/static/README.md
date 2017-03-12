@@ -31,7 +31,7 @@ Secrets uses the underlying "FXC" cryptographic protocol developed in [Freecoin]
 
 Secrets is written in Clojure and is fully cross-platform: one can run it locally on a GNU/Linux machine, as well on Apple/OSX and MS/Windows.
 
-<img class="pull-left" src="http://secrets.dyne.org/static/img/leiningen.jpg"
+<img class="pull-left" src="https://secrets.dyne.org/static/img/leiningen.jpg"
 	style="padding-right: 1.5em">
 
 The following software is required: [OpenJDK](http://openjdk.java.net), [Clojure](http://clojure.org), [Leiningen](http://leiningen.org).
