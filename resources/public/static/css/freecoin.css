@@ -23,6 +23,10 @@ img {
 	overflow: hidden;
 }
 
+.input-form {
+	clear: right;
+}
+
 li {
     padding: .5em;
 }

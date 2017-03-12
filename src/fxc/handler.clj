@@ -43,8 +43,8 @@
 
 (def generate-form-spec
   {:renderer :bootstrap3-stacked
-   :fields [{:name :secret  :type :password :datatype :string}
-            {:name :confirm  :type :password :datatype :string}]
+   :fields [{:name :secret  :type :password :datatype :string :size 33}
+            {:name :confirm  :type :password :datatype :string :size 33}]
    :validations [[:required [:secret :confirm]]
                  [:max-length 32 :secret]
                  [:equal [:secret :confirm]]]
