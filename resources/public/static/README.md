@@ -20,7 +20,7 @@ Secrets can be used to split a secret (like a password) into pieces to be distri
 
 Secret sharing can be useful in many different situations and this tool is a very simple and highly available implementation of secret sharing, free for anyone to use, locally installed or from this website.
 
-Secrets uses the underlying "FXC" cryptographic protocol developed in [Freecoin](https://github.com/PIENews/freecoin). The FXC protocol and its use cases related to social digital currency are explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the research conducted in the [D-CENT project](http://dcentproject.eu/resource_category/publications/).
+Secrets uses the underlying "FXC" cryptographic protocol developed in [Freecoin](https://github.com/PIENews/freecoin). The FXC protocol and its use cases related to social digital currency are explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the research conducted in the [D-CENT project](http://dcentproject.eu).
 
 
 
@@ -36,11 +36,7 @@ Secrets is written in Clojure and is fully cross-platform: one can run it locall
 
 The following software is required: [OpenJDK](http://openjdk.java.net), [Clojure](http://clojure.org), [Leiningen](http://leiningen.org).
 
-For instance on Devuan systems one can install all necessary dependencies via the following packages:
-
-```
-wget openjdk-7-jdk libversioneer-clojure haveged
-```
+For instance on Devuan systems one can install all necessary dependencies using apt and the following packages: `apt-get openjdk-7-jdk libversioneer-clojure haveged`.
 
 then install Leiningen which will take care of all Clojure dependencies:
 
@@ -56,7 +52,7 @@ then from inside the Secrets source, start it with:
 lein ring server
 ```
 
-This command will open a browser pointing on the service running on localhost port 8000
+This command will open a browser pointing on the service running locally on http://localhost:3000
 
 To start only a web server for the application, but no browser, run: `server-headless`
 
@@ -81,6 +77,8 @@ Industry standard addressed: Information technology -- Security techniques -- Se
 Secrets is Copyright (C) 2015-2017 by the Dyne.org Foundation
 
 Secrets and the FXC "simple secret sharing" protocol and library are designed, written and maintained by Denis Roio <jaromil@dyne.org>
+
+Tanks for ideas and inspirations to Marco Sachy and Enric Durán Giralt.
 
 ```
 This program is free software: you can redistribute it and/or modify

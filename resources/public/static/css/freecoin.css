@@ -7,6 +7,10 @@ body {
 
 }
 
+code {
+	font-size: .8em;
+}
+
 h1, h2, h3, h4 {
 	font-family: "granjon"
 }
