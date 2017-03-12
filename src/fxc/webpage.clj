@@ -68,8 +68,9 @@
         [:ul {:class "nav navbar-nav"}
          [:li [:a {:href "https://github.com/PIENews/secrets"} "About Secrets"]]
          [:li {:role "separator" :class "divider"} ]
-         [:li [:a {:href "/"} "Split PIN" [:span {:class "sr-only"}"(current)"]]]
-         [:li [:a {:href "/recover"} "Recover PIN" ]]
+         [:li [:a {:href "/"} "Split Secret"
+               [:span {:class "sr-only"}"(current)"]]]
+         [:li [:a {:href "/recover"} "Recover Secret" ]]
          [:li {:role "separator" :class "divider"} ]
          ]]]
 
