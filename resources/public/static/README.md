@@ -78,7 +78,7 @@ Secrets is Copyright (C) 2015-2017 by the Dyne.org Foundation
 
 Secrets and the FXC "simple secret sharing" protocol and library are designed, written and maintained by Denis Roio <jaromil@dyne.org>
 
-Tanks for ideas and inspirations to Marco Sachy and Enric Durán Giralt.
+Thanks for ideas and inspirations to Marco Sachy and Enric Durán Giralt.
 
 ```
 This program is free software: you can redistribute it and/or modify
