@@ -35,7 +35,7 @@
 (defn render-head
   ([] (render-head 
        "Simple Secret Sharing" ;; default title
-       "Social management of secrets, free software by Dyne.org"
+       "Decentralised Social Management of Secrets"
        "https://secrets.dyne.org")) ;; default desc
   
   ([title desc url]
@@ -108,7 +108,7 @@
 
 (defn render-page [{:keys [section body] :as content}]
   (let [title "Simple Secret Sharing Service"
-        desc "Social and decentralised management of passwords, free software by Dyne.org"
+        desc "Decentralised Social Management of Secrets"
         url "https://secrets.dyne.org"]
 
     (page/html5
@@ -120,7 +120,7 @@
       [:div {:class "container"}
        [:img {:src "/static/img/secret_ladies.jpg" :class "pull-right img-responsive" :style "width: 16em; border:1px solid #010a40"}]
        [:h1 "Simple Secret Sharing Service" ]
-       [:h2 "Social and decentralised management of passwords"]
+       [:h2 "Decentralised Social Management of Secrets"
        [:h3 section]
        body]
 
