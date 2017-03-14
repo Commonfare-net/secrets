@@ -28,7 +28,7 @@
 (def settings
   {:total (Integer. 5)
    :quorum (Integer. 3)
-
+   :max 256
    :prime 'prime4096
 
    :description "FXC v1 (Simple Secret Sharing, Freecoin component)"

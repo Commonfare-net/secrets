@@ -124,7 +124,7 @@
   ;; two is subtracted to remove the original pass len and position
   {:length (first (first slices))
    :secrets (for [c (range 1 (dec (count (first slices))))]
-              (loop [[s & sli] (sort-by last slices) ;; TODO: sort
+              (loop [[s & sli] (sort-by last slices)
                      res []  ]
                 (let [res (conj res [(last s) (nth s c)])]
                   (if (empty? sli) res

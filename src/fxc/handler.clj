@@ -90,7 +90,7 @@
 
   (POST "/share" {params :params}
         (let [config (config-read settings)
-              input (fh/validate-form (generate-form-spec config))]
+              input (fh/validate-form (generate-form-spec config) params)]
           (if (= (:status input) :error)
             (web/render-static (web/render-error input))
             ;; take only a max of 32 chars, else truncate
@@ -118,7 +118,7 @@
 
   (POST "/combine" {params :params}
         (let [config (config-read settings)
-              input (fh/validate-form (recovery-form-spec config))]
+              input (fh/validate-form (recovery-form-spec config) params)]
               
           (if (= (:status input) :error)
             (web/render-static (web/render-error input))
