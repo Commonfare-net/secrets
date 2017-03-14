@@ -80,50 +80,53 @@
 
 
   (GET "/share" []
-      (web/render-page
-       {:section "Share a Secret to 5 pieces (quorum 3)"
-        :body
-        [:div {:class "secrets row center"}
-         [:div {:class "content input-form"}
-          (fc/render-form generate-form-spec)]]}))
+       (let [config (config-read settings)]
+         (web/render-page
+          {:section "Share a Secret to 5 pieces (quorum 3)"
+           :body
+           [:div {:class "secrets row center"}
+            [:div {:class "content input-form"}
+             (fc/render-form (generate-form-spec config))]]})))
 
   (POST "/share" {params :params}
-        (let [input (fh/validate-form generate-form-spec params)]
+        (let [config (config-read settings)
+              input (fh/validate-form (generate-form-spec config))]
           (if (= (:status input) :error)
             (web/render-static (web/render-error input))
             ;; take only a max of 32 chars, else truncate
-            (let [pass   (trunc 32 (get-in input [:data :secret]))
-                  conf (config-read settings)
-                  shares (encode conf pass)]
+            (let [pass   (trunc (:max config) (get-in input [:data :secret]))
+                  shares (encode config pass)]
 
             (web/render-page
              {:section "Secret shared succesfully"
               :body [:div {:class "secrets row center"}
                      [:div {:class "slices"}
-                      [:h3 (str "Split to " (:total conf)
+                      [:h3 (str "Split to " (:total config)
                                 " shared secrets, quorum "
-                                (:quorum conf) ":")]
+                                (:quorum config) ":")]
                       [:ul (map #(conj [:li {:class "content"}] %)
                                 shares)]]]})))))
 
 
   (GET "/combine" []
-    (web/render-page {:section "Combine a Shared Secret"
-                      :body [:div {:class "recovery row center"}
-                         [:div {:class "content input-form"}
-                          (fc/render-form recovery-form-spec)
-                          ]]}))
+       (let [config (config-read settings)]
+             (web/render-page {:section "Combine a Shared Secret"
+                               :body [:div {:class "recovery row center"}
+                                      [:div {:class "content input-form"}
+                                       (fc/render-form (recovery-form-spec config))
+                                       ]]})))
 
   (POST "/combine" {params :params}
-        (let [input (fh/validate-form recovery-form-spec params)
-              conf (config-read settings)]
+        (let [config (config-read settings)
+              input (fh/validate-form (recovery-form-spec config))]
+              
           (if (= (:status input) :error)
             (web/render-static (web/render-error input))
             (web/render-page
              {:section "Secret recovered succesfully"
               :body (let [para (:data input)
                           converted
-                          (decode conf
+                          (decode config
                                   (map #(trunc 256 %) (vals para)))]
                       [:div {:class "password"}
                        "Your Secret: "
