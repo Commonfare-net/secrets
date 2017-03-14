@@ -42,17 +42,17 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
 
-(def generate-form-spec
+(defn generate-form-spec [config]
   {:renderer :bootstrap3-stacked
    :fields [{:name :secret  :type :password :datatype :string :size 33}
             {:name :confirm  :type :password :datatype :string :size 33}]
    :validations [[:required [:secret :confirm]]
-                 [:max-length 32 :secret]
+                 [:max-length (:max config) :secret]
                  [:equal [:secret :confirm]]]
    :action "/share"
    :method "post"})
 
-(def recovery-form-spec
+(defn recovery-form-spec [config]
   {:renderer :bootstrap3-stacked
    :fields [{:name :share_1  :type :text :datatype :string}
             {:name :share_2  :type :text :datatype :string}
@@ -128,8 +128,10 @@
                       [:div {:class "password"}
                        "Your Secret: "
                        [:div {:class "content"} converted]])}))))
-  (GET "/config" []
-       (web/render-static (present/edn->html (config-read settings))))
+
+  ;; for DEBUG (don't activate in production, will expose the :salt string
+  ;; (GET "/config" []
+  ;;      (web/render-static (present/edn->html (config-read settings))))
 
   ;; TODO: detect cryptographical conversion error: returned is the first share
 
