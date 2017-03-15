@@ -22,22 +22,91 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (ns fxc.webpage
-  (:require [hiccup.page :as page]))
+  (:require [fxc.form_helpers :as fh]
+            [fxc.config :refer :all]
+            [hiccup.page :as page]
+            [json-html.core :as present]))
 
+(declare render)
 (declare render-page)
+(declare render-head)
+(declare render-navbar)
+(declare render-footer)
+
+
 (declare render-error)
 (declare render-static)
 
+(defn show-config [request]
+  (present/edn->html (dissoc (:session request)
+                             :salt :prime :length :entropy
+                             :type "__anti-forgery-token")))
+
+
+
+(defn check-input [session params form-spec]
+  (if (nil? (:total session)) (render-error "Error: no Session.")
+      (if (nil? (:secret params)) (render-error session "Error: no Params.")
+          (let [input (fh/validate-form
+                       (form-spec session) params)]
+            (if (= (:status input) :error)
+              (render-error session [:div [:h2 "form validation"]
+                                     (:problems input)])
+              (if (empty? (get-in input [:data :secret]))
+                (render-error session "No input.")
+                {:config session
+                 :params (:data input)}))))))
+
+(defn check-session [request]
+  (let [session (:session request)]
+    (if-not (contains? session :total)
+      (conj session (config-read)) session)))
+
+(defn check-params [request form-spec]
+  (fh/validate-form
+   (form-spec (:session request))
+   (:params request)))
+
+(defn render [body]
+  {:headers {"Content-Type"
+             "text/html; charset=utf-8"}
+   :body (page/html5
+          (render-head)
+          [:body {:class "fxc static"}
+           (render-navbar)
+           
+           [:div {:class "container"}
+           ;;  [:img {:src "/static/img/secret_ladies.jpg"
+           ;;         :class "pull-right img-responsive"
+           ;;         :style "width: 16em; border:1px solid #010a40"}]
+           ;;  [:h1 "Simple Secret Sharing Service" ] body]
+           body]
+
+           (render-footer)
+           ])})
+                      
 (defn render-error
-  ([]   [:div [:h1 "Error:"] [:h2 "Unknown"]])
-  ([in] [:div [:h1 "Error:"] [:h2 (drop 1 in)]]))
+  ([]    (render-error {} "Unknown"))
+  ([err] (render-error {} err))
+  ([session error]
+   {:headers {"Content-Type"
+              "text/html; charset=utf-8"}
+    :session session
+    :body (page/html5
+           (render-head)
+           [:body {:class "fxc static"}
+            (render-navbar)
+            [:div {:class "container"}
+             [:div {:class "error"}
+              [:h1 "Error:"] [:h2 (drop 1 error)]]]])}))
+
 
 (defn render-head
-  ([] (render-head 
+  ([] (render-head
        "Simple Secret Sharing" ;; default title
        "Decentralised Social Management of Secrets"
        "https://secrets.dyne.org")) ;; default desc
-  
+
   ([title desc url]
    [:head [:meta {:charset "utf-8"}]
     [:meta {:http-equiv "X-UA-Compatible" :content "IE=edge,chrome=1"}]
@@ -93,6 +162,7 @@
     [:img {:src "static/img/AGPLv3.png" :style "margin-top: 3em"
            :alt "Affero GPLv3 License"
            :title "Affero GPLv3 License"} ]]])
+
 
 (defn render-static [body]
   (page/html5 (render-head)

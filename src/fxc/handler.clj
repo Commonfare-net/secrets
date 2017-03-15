@@ -24,9 +24,11 @@
 (ns fxc.handler
   (:require [clojure.java.io :as io]
             [compojure.core :refer :all]
+            [compojure.handler :refer :all]
             [compojure.route :as route]
-
+            [compojure.response :as response]
             [hiccup.page :as page]
+            [hiccup.middleware :refer [wrap-base-url]]
 
             [fxc.core :refer :all]
             [fxc.webpage :as web]
@@ -37,22 +39,22 @@
             [formidable.core :as fc]
 
             [markdown.core :as md]
-            [json-html.core :as present]
             [hiccup.page :as page]
+            [ring.middleware.session :refer :all]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
 
 (defn generate-form-spec [config]
   {:renderer :bootstrap3-stacked
-   :fields [{:name :secret  :type :password :datatype :string :size 33}
-            {:name :confirm  :type :password :datatype :string :size 33}]
+   :fields [{:name :secret  :type :password :datatype :string}
+            {:name :confirm  :type :password :datatype :string}]
    :validations [[:required [:secret :confirm]]
                  [:max-length (:max config) :secret]
                  [:equal [:secret :confirm]]]
    :action "/share"
    :method "post"})
 
-(defn recovery-form-spec [config]
+(defn combine-form-spec [config]
   {:renderer :bootstrap3-stacked
    :fields [{:name :share_1  :type :text :datatype :string}
             {:name :share_2  :type :text :datatype :string}
@@ -68,77 +70,101 @@
 
 (defroutes app-routes
 
-  (GET "/" []
-       (web/render-static
-         (md/md-to-html-string
-          (slurp (io/resource "public/static/README.md")))))
+  (GET "/" request
+       (conj {:session (web/check-session request)}
+             (web/render
+              (md/md-to-html-string
+               (slurp (io/resource "public/static/README.md"))))))
 
-  (GET "/about" []
-       (web/render-static
-        (md/md-to-html-string
-         (slurp (io/resource "public/static/README.md")))))
+  (GET "/about" request
+       (conj {:session (web/check-session request)}
+             (web/render
+              (md/md-to-html-string
+               (slurp (io/resource "public/static/README.md"))))))
 
-
-  (GET "/share" []
-       (let [config (config-read settings)]
-         (web/render-page
-          {:section "Share a Secret to 5 pieces (quorum 3)"
-           :body
-           [:div {:class "secrets row center"}
-            [:div {:class "content input-form"}
-             (fc/render-form (generate-form-spec config))]]})))
-
-  (POST "/share" {params :params}
-        (let [config (config-read settings)
-              input (fh/validate-form (generate-form-spec config) params)]
-          (if (= (:status input) :error)
-            (web/render-static (web/render-error input))
-            ;; take only a max of 32 chars, else truncate
-            (let [pass   (trunc (:max config) (get-in input [:data :secret]))
-                  shares (encode config pass)]
-
-            (web/render-page
-             {:section "Secret shared succesfully"
-              :body [:div {:class "secrets row center"}
-                     [:div {:class "slices"}
-                      [:h3 (str "Split to " (:total config)
-                                " shared secrets, quorum "
-                                (:quorum config) ":")]
-                      [:ul (map #(conj [:li {:class "content"}] %)
-                                shares)]]]})))))
+  (GET "/share" request
+       (let [config (web/check-session request)]
+         (conj {:session config}
+               (web/render
+                [:div {:class "secrets row center"}
+                 (str "Split a Secret to "
+                      (:total config)
+                      " shares with quorum "
+                      (:quorum config))
+                 [:div {:class "content input-form"}
+                  (fc/render-form
+                   (generate-form-spec config))]]))))
 
 
-  (GET "/combine" []
-       (let [config (config-read settings)]
-             (web/render-page {:section "Combine a Shared Secret"
-                               :body [:div {:class "recovery row center"}
-                                      [:div {:class "content input-form"}
-                                       (fc/render-form (recovery-form-spec config))
-                                       ]]})))
+  (POST "/share" request
+        (let [config (web/check-session request)
+              params (web/check-params request generate-form-spec)]          
+          (cond
+            (not (contains? config :total))
+              (web/render-error "Error: no Session.")
+            (= (:status params) :error)
+            (web/render-error config [:div [:h2 "form validation"]
+                                      (:problems params)])
+            :else 
+            (if-let [input (:data params)]
+              (cond  
+                (not (contains? input :secret))
+                (web/render-error config "Error: no Params.")
+                (empty? (:secret input))
+                (web/render-error config "No input.")
+                :else
+                ;; all checks passed
+                
+                (let [pass   (trunc (:max config) (:secret input))
+                      shares (encode config pass)]
+                  (conj {:session config}
+                        (web/render
+                         [:div {:class "results"}
+                          [:h2 "Secret shared succesfully"]
+                          [:div {:class "secrets row center"}
+                           [:div {:class "slices"}
+                            [:h3 (str "Split to " (:total config)
+                                      " shared secrets, quorum "
+                                      (:quorum config) ":")]
+                            [:ul (map #(conj [:li {:class "content"}] %)
+                                      shares)]]]]))))))))
+  
+  
+  (GET "/combine" request
+       (let [config (web/check-session request)]
+         (conj {:session config}
+               (web/render 
+                [:div {:class "recovery row center"}
+                 [:h2 "Combine a Shared Secret"]
+                 [:div {:class "content input-form"}]
+                (fc/render-form (combine-form-spec config))]))))
 
-  (POST "/combine" {params :params}
-        (let [config (config-read settings)
-              input (fh/validate-form (recovery-form-spec config) params)]
-              
-          (if (= (:status input) :error)
-            (web/render-static (web/render-error input))
-            (web/render-page
-             {:section "Secret recovered succesfully"
-              :body (let [para (:data input)
-                          converted
-                          (decode config
-                                  (map #(trunc 256 %) (vals para)))]
+  (POST "/combine" request
+        (let [config (web/check-session request)
+              params (web/check-params request combine-form-spec)]          
+          (cond
+            (not (contains? config :total))
+            (web/render-error "Error: no Session.")
+            (= (:status params) :error)
+            (web/render-error config [:div [:h2 "form validation"]
+                                      (:problems params)])
+            :else 
+            (conj {:session config}
+                  (web/render
+                    [:h2 "Secret recovered:"]
+                    (let [combined
+                          (decode
+                           config
+                           (map #(trunc 256 %) (vals (:data params))))]
                       [:div {:class "password"}
                        "Your Secret: "
-                       [:div {:class "content"} converted]])}))))
+                       [:div {:class "content"} combined]]))))))
 
-  ;; for DEBUG (don't activate in production, will expose the :salt string
-  ;; (GET "/config" []
-  ;;      (web/render-static (present/edn->html (config-read settings))))
 
   ;; TODO: detect cryptographical conversion error: returned is the first share
-
+  (route/resources "/")
   (route/not-found "Not Found"))
 
 (def app
-  (wrap-defaults app-routes site-defaults))
+  (-> (wrap-defaults app-routes site-defaults)
+      (wrap-session)))

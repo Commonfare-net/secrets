@@ -22,7 +22,8 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (ns fxc.config
-  (:require [clojure.java.io :as io]
+  (:require [fxc.core :as fxc]
+            [clojure.java.io :as io]
             [cheshire.core :refer :all]))
 
 (declare config-read)
@@ -30,7 +31,7 @@
 (defn config-read
   "read configurations from standard locations, overriding defaults or
   system-wide with user specific paths."
-  ([] (config-read {}))
+  ([] (config-read fxc/settings))
   ([default]
    (let [home (System/getenv "HOME")
          pwd  (System/getenv "PWD")]
