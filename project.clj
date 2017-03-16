@@ -5,13 +5,10 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.5.2"]
                  [ring/ring-defaults "0.2.3"]
-                 [org.clojure/math.numeric-tower "0.0.4"]
-                 [com.tiemens/secretshare "1.4.2"]
                  [json-html "0.4.0"]
                  [formidable "0.1.10"]
                  [markdown-clj "0.9.98"]
-                 [jstrutz/hashids "1.0.1"]
-                 [me.lemire.integercompression/JavaFastPFOR "0.1.10"]]
+                 [org.clojars.dyne/fxc "0.1.0"]]
 
   :jvm-opts ["-Djava.security.egd=file:/dev/random" ;use a proper random source
              "-XX:-OmitStackTraceInFastThrow" ; stacktrace JVM exceptions
