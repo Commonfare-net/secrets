@@ -60,7 +60,8 @@
 (defn check-session [request]
   (let [session (:session request)]
     (if-not (contains? session :total)
-      (conj session (config-read)) session)))
+      (conj session (config-read))
+      session)))
 
 (defn check-params [request form-spec]
   (fh/validate-form

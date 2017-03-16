@@ -4,6 +4,7 @@
   "protocol" : "FXC1",
   "alphabet" : "ABCDEFGHJKLMNPQRSTUVWXYZ23456789",
   "quorum" : 3,
+  "max" : 1024,
   "prime" : "prime4096",
   "type" : "WEB",
   "total" : 5,

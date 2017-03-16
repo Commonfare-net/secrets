@@ -46,11 +46,10 @@
 
 (defn generate-form-spec [config]
   {:renderer :bootstrap3-stacked
-   :fields [{:name :secret  :type :password :datatype :string}
-            {:name :confirm  :type :password :datatype :string}]
-   :validations [[:required [:secret :confirm]]
-                 [:max-length (:max config) :secret]
-                 [:equal [:secret :confirm]]]
+   :fields [{:name :secret  :type :textarea :datatype :string
+              }]
+   :validations [[:required [:secret]]
+                 [:max-length (:max config) :secret]]
    :action "/share"
    :method "post"})
 
@@ -151,14 +150,16 @@
             :else 
             (conj {:session config}
                   (web/render
+                   [:div {:class "combined"}
                     [:h2 "Secret recovered:"]
                     (let [combined
                           (decode
                            config
-                           (map #(trunc 256 %) (vals (:data params))))]
+                           (vals (:data params)))]
                       [:div {:class "password"}
                        "Your Secret: "
-                       [:div {:class "content"} combined]]))))))
+                       [:div {:class "content"} [:code combined ]
+                        ]])])))))
 
 
   ;; TODO: detect cryptographical conversion error: returned is the first share

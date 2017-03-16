@@ -9,6 +9,8 @@ body {
 
 code {
 	font-size: .8em;
+	display: block;
+	white-space: pre-wrap;
 }
 
 h1, h2, h3, h4 {
@@ -36,7 +38,7 @@ li {
 }
 
 .password {
-	font-size: 1.5em;
+	font-size: 1.5;
 	padding: 1em;
 	/* display: inline-block; */
 }
@@ -46,7 +48,7 @@ li {
 }
 
 .password .content {
-	font-size: 2em;
+	font-size: 1em;
 }
 
 .slices {
