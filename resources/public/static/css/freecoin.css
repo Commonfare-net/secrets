@@ -3,25 +3,30 @@
 
 body {
 	font-family: "granjon";
-	font-size: 2em;
-
+	font-size: 22px;
+	font-smooth: always;
+	-webkit-font-smoothing: antialiased;
 }
 
 code {
 	font-size: .8em;
-	display: block;
+	/* display: block; */
 	white-space: pre-wrap;
 }
 
-h1, h2, h3, h4 {
-	font-family: "granjon"
-}
+h1, h2, h3, h4 { }
 
 p {
-	font-family: "granjon"
+	letter-spacing: 0.01rem;
+	font-style: normal;
+	line-height: 1.5;
 }
 
 img {
+	width: auto;
+	height: auto;
+	max-width: 100%;
+	vertical-align: middle;
 	overflow: hidden;
 }
 

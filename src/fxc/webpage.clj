@@ -193,7 +193,7 @@
 
      (render-navbar)
 
-      [:div {:class "container"}
+      [:div {:class "container-fluid"}
        [:img {:src "/static/img/secret_ladies.jpg" :class "pull-right img-responsive" :style "width: 16em; border:1px solid #010a40"}]
        [:h1 "Simple Secret Sharing Service" ]
        [:h2 "Decentralised Social Management of Secrets" ]
