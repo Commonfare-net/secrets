@@ -24,6 +24,7 @@
 (ns fxc.webpage
   (:require [fxc.form_helpers :as fh]
             [fxc.config :refer :all]
+            [fxc.core :as fxc]
             [hiccup.page :as page]
             [json-html.core :as present]))
 
@@ -37,8 +38,8 @@
 (declare render-error)
 (declare render-static)
 
-(defn show-config [request]
-  (present/edn->html (dissoc (:session request)
+(defn show-config [session]
+  (present/edn->html (dissoc session
                              :salt :prime :length :entropy
                              :type "__anti-forgery-token")))
 
@@ -59,9 +60,11 @@
 
 (defn check-session [request]
   (let [session (:session request)]
-    (if-not (contains? session :total)
-      (conj session (config-read))
-      session)))
+    (cond
+    (not (contains? session :config)) (conj session (config-read))
+    (string?  (:config session)) session
+    (false? (:config session)) fxc/settings
+    )))
 
 (defn check-params [request form-spec]
   (fh/validate-form
@@ -99,7 +102,9 @@
             (render-navbar)
             [:div {:class "container"}
              [:div {:class "error"}
-              [:h1 "Error:"] [:h2 (drop 1 error)]]]])}))
+              [:h1 "Error:"] [:h2 (drop 1 error)]]
+             [:div {:class "config"}
+              (show-config session)]]])}))
 
 
 (defn render-head

@@ -37,12 +37,12 @@
          pwd  (System/getenv "PWD")]
      (loop [[p & paths] ["/etc/secrets/config.json" 
                          (str home "/.secrets/config.json")
-                         (str pwd "config.json")]
+                         (str pwd "/config.json")]
             res default ]
        (let [res (merge res
                         (if (.exists (io/as-file p))
-                          (parse-stream (io/reader p) true)))]
-         (if (empty? paths) res
+                          (conj {:config p} (parse-stream (io/reader p) true))))]
+         (if (empty? paths) (conj {:config false} res)
              (recur paths res)))))))
 
 (defn config-write
