@@ -16,11 +16,9 @@
 
 [![Build Status](https://travis-ci.org/PIENews/secrets.svg?branch=master)](https://travis-ci.org/PIENews/secrets)
 
-Secrets can be used to split a secret (like a password) into pieces to be distributed to friends. When all friends agree, the pieces can be recombined to retrieve the original secret password, for instance to give consensual access to a private document or service.
+Secrets can be used to split a secret text into shares to be distributed to friends. When all friends agree, the shares can be combined to retrieve the original secret text, for instance to give consensual access to a lost pin, a password, a list of passwords, a private document or a key to an encrypted volume.
 
-Secret sharing can be useful in many different situations and this tool is a very simple and highly available implementation of secret sharing, free for anyone to use, locally installed or from this website.
-
-Secrets uses the underlying [FXC](https://github.com/dyne/FXC) cryptographic protocol, whose use cases relate to trust management and social digital currency, explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the [D-CENT project](http://dcentproject.eu) and adopted as a component of the social wallet toolkit being developed for the [PIE project](https://github.com/pienews).
+Secret sharing can be useful in many different situations and this tool is a simple and well documented free and open source implementation available for anyone to use from this website, but also independently on an offline PC.
 
 ## How to use Secrets
 
@@ -28,7 +26,7 @@ Secrets uses the underlying [FXC](https://github.com/dyne/FXC) cryptographic pro
 1) Have a secret
 </div>
 
-For Secrets to be useful one needs to have a secret :^) don't be silly now, everyone has secrets. Lets say a backup of your passwords, a Bitcoin wallet, a testament... Remember it has to be just text and smaller than 1024 characters.
+For Secrets to be useful one needs to have a secret :^) don't be silly now, everyone has secrets. Lets say a backup of your passwords or a crypto wallet or a testament... Remember it has to be just text and smaller than 1024 characters.
 
 <div class="well well-sm">
 2) Trust a group of people
@@ -121,11 +119,11 @@ Other configuration items are self explanatory and can be left untouched.
 
 ## Acknowledgments
 
-Secrets is Free and Open Source research and development activity funded by the European Commission in the context of the [Collective Awareness Platforms for Sustainability and Social Innovation (CAPSSI)](https://ec.europa.eu/digital-single-market/en/collective-awareness) program. It was developed within the [Decentralised Citizen Engagement Technologies](http://dcentproject.eu) project (grant nr. 610349) and further adopted and maintained by the [Commonfare](http://pieproject.eu) project (grant nr. 687922).
+Secrets is Free and Open Source research and development activity funded by the European Commission in the context of the [Collective Awareness Platforms for Sustainability and Social Innovation (CAPSSI)](https://ec.europa.eu/digital-single-market/en/collective-awareness) program. Secrets uses the underlying [FXC](https://github.com/dyne/FXC) cryptographic protocol, whose use cases relate to trust management and social digital currency, explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the [D-CENT project](http://dcentproject.eu) (grant nr. 610349) and adopted as a component of the social wallet toolkit being developed for the [PIE project](https://github.com/pienews) (grant nr. 687922).
 
 Industry standard addressed: Information technology -- Security techniques -- Secret sharing
-- [ISO/IEC 19592-1:2016](https://www.iso.org/standard/65422.html) (Part 1: General)
-- [ISO/IEC FDIS 19592-2 (Under development)](https://www.iso.org/standard/65425.html) (Part 2: Fundamental mechanisms)
+- Part 1: General - [ISO/IEC 19592-1:2016](https://www.iso.org/standard/65422.html)
+- Part 2: Fundamental mechanisms - [ISO/IEC FDIS 19592-2 (Under development)](https://www.iso.org/standard/65425.html)
 
 The [Secret Sharing](https://en.wikipedia.org/wiki/Secret_sharing) algorithm adopted is based on [Shamir's Secret Sharing](https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing), references:
 - Shamir, Adi (1979), "How to share a secret", Communications of the ACM 22 (11): 612–613
@@ -137,7 +135,7 @@ The implementation used is by Tim Tiemens with a 4096 cipher prime number. The I
 
 Secrets is Copyright (C) 2015-2017 by the Dyne.org Foundation
 
-Secrets and the FXC protocol and library are designed, written and maintained by Denis Roio <jaromil@dyne.org>
+Secrets software and documentation are designed, written and maintained by Denis Roio <jaromil@dyne.org>
 
 Thanks for ideas and inspirations to Marco Sachy and Enric Durán Giralt.
 
