@@ -26,7 +26,7 @@ Secret sharing can be useful in many different situations and this tool is a sim
 1) Have a secret
 </div>
 
-For Secrets to be useful one needs to have a secret :^) don't be silly now, everyone has secrets. Lets say a backup of your passwords or a crypto wallet or a testament... Remember it has to be just text and smaller than 1024 characters.
+For Secrets to be useful... one needs to have a secret :) don't be silly now, everyone has secrets. Lets say a backup of your passwords or a crypto wallet or a testament... remember it has to be just text and smaller than 1024 characters.
 
 <div class="well well-sm">
 2) Trust a group of people
@@ -119,6 +119,11 @@ Other configuration items are self explanatory and can be left untouched.
 
 ## Acknowledgments
 
+<img src="https://github.com/dyne/FXC/raw/master/doc/Haarlemsche_ABC.jpg"
+	alt="Haarlem's Alphabet textile, from a Vlisco exhibition"
+	title="Haarlem's Alphabet textile, from a Vlisco exhibition"
+	style="float: right" width="300px">
+
 Secrets is Free and Open Source research and development activity funded by the European Commission in the context of the [Collective Awareness Platforms for Sustainability and Social Innovation (CAPSSI)](https://ec.europa.eu/digital-single-market/en/collective-awareness) program. Secrets uses the underlying [FXC](https://github.com/dyne/FXC) cryptographic protocol, whose use cases relate to trust management and social digital currency, explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the [D-CENT project](http://dcentproject.eu) (grant nr. 610349) and adopted as a component of the social wallet toolkit being developed for the [PIE project](https://github.com/pienews) (grant nr. 687922).
 
 Industry standard addressed: Information technology -- Security techniques -- Secret sharing
@@ -129,7 +134,7 @@ The [Secret Sharing](https://en.wikipedia.org/wiki/Secret_sharing) algorithm ado
 - Shamir, Adi (1979), "How to share a secret", Communications of the ACM 22 (11): 612–613
 - Knuth, D. E. (1997), The Art of Computer Programming, II: Seminumerical Algorithms: 505
 
-The implementation used is by Tim Tiemens with a 4096 cipher prime number. The Integer Compression algorithm used internally is the FastPFOR128 by Daniel Lemire, see: Lemire, D. and Boytsov, L. "[Decoding billions of integers per second through vectorization](http://arxiv.org/abs/1209.2137)" (2015).
+The Secret Sharing algorithm used internally is implemented in Java by Tim Tiemens, adopted with a 4096 cipher prime number. The Integer Compression algorithm used internally is the FastPFOR128 by Daniel Lemire, see: Lemire, D. and Boytsov, L. "[Decoding billions of integers per second through vectorization](http://arxiv.org/abs/1209.2137)" (2015).
 
 ## License
 
@@ -137,7 +142,7 @@ Secrets is Copyright (C) 2015-2017 by the Dyne.org Foundation
 
 Secrets software and documentation are designed, written and maintained by Denis Roio <jaromil@dyne.org>
 
-Thanks for ideas and inspirations to Marco Sachy and Enric Durán Giralt.
+Thanks for ideas and inspirations to Francesca Bria, Marco Sachy and Enric Durán Giralt.
 
 ```
 This program is free software: you can redistribute it and/or modify
