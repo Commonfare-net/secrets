@@ -119,10 +119,10 @@ Other configuration items are self explanatory and can be left untouched.
 
 ## Acknowledgments
 
-<img src="https://github.com/dyne/FXC/raw/master/doc/Haarlemsche_ABC.jpg"
+<img src="https://secrets.dyne.org/static/img/haarlemsche_abc.jpg"
 	alt="Haarlem's Alphabet textile, from a Vlisco exhibition"
 	title="Haarlem's Alphabet textile, from a Vlisco exhibition"
-	style="float: right" width="300px">
+	style="float: right; width: 300px">
 
 Secrets is Free and Open Source research and development activity funded by the European Commission in the context of the [Collective Awareness Platforms for Sustainability and Social Innovation (CAPSSI)](https://ec.europa.eu/digital-single-market/en/collective-awareness) program. Secrets uses the underlying [FXC](https://github.com/dyne/FXC) cryptographic protocol, whose use cases relate to trust management and social digital currency, explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the [D-CENT project](http://dcentproject.eu) (grant nr. 610349) and adopted as a component of the social wallet toolkit being developed for the [PIE project](https://github.com/pienews) (grant nr. 687922).
 
