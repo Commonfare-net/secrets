@@ -20,11 +20,24 @@ Secrets can be used to split a secret (like a password) into pieces to be distri
 
 Secret sharing can be useful in many different situations and this tool is a very simple and highly available implementation of secret sharing, free for anyone to use, locally installed or from this website.
 
-Secrets uses the underlying "FXC" cryptographic protocol developed in [Freecoin](https://github.com/PIENews/freecoin). The FXC protocol and its use cases related to social digital currency are explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the research conducted in the [D-CENT project](http://dcentproject.eu).
+Secrets uses the underlying [FXC](https://github.com/dyne/FXC) cryptographic protocol, whose use cases relate to trust management and social digital currency, explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the [D-CENT project](http://dcentproject.eu) and adopted as a component of the social wallet toolkit being developed for the [PIE project](https://github.com/pieproject).
 
+## How reliable is this service
 
+Secret is written in a stateless language, does not make use of any database nor atoms and all content passing through it is not saved, only transformed and shown on screen.  This service is a functional demo allowing anyone to split up to 1Kb of secret data into 5 shares of which 3 (a number we call "quorum") are enough to recover the initial secret. 
 
-## Running Secrets on your own computer
+Anyone planning to use Secrets for mission critical environments is encouraged to build his/her own version: this is possible on any PC operating system supporting Java. By running Secrets autonomously is also possible to change its configuration, for instance to:
+- accept larger secrets
+- split into more or less than 5 shares
+- change the minimum amount of shares needed to recover the secret
+- change the alphabetical subset used to compose the shares
+- change the cryptographic "salt", a secret key that is unique to each installation
+
+If the secret being shared is really precious one should also consider adding an additional layer of encryption, for instance by using symmetric password encryption or even the public keys of all participants.
+
+To share large files it is recommended to use filesystem encryption (for instance using our other software [Tomb](https://dyne.org/software/tomb)) with a key that is then shared: this way the encrypted files can be stored in duplicate copies in possession of every participant, but they will be accessed only when enough participants agree.
+
+## Building Secrets on your own computer
 
 
 <img class="pull-right" src="https://secrets.dyne.org/static/img/clojure.png">
