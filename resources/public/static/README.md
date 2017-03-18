@@ -20,9 +20,53 @@ Secrets can be used to split a secret (like a password) into pieces to be distri
 
 Secret sharing can be useful in many different situations and this tool is a very simple and highly available implementation of secret sharing, free for anyone to use, locally installed or from this website.
 
-Secrets uses the underlying [FXC](https://github.com/dyne/FXC) cryptographic protocol, whose use cases relate to trust management and social digital currency, explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the [D-CENT project](http://dcentproject.eu) and adopted as a component of the social wallet toolkit being developed for the [PIE project](https://github.com/pieproject).
+Secrets uses the underlying [FXC](https://github.com/dyne/FXC) cryptographic protocol, whose use cases relate to trust management and social digital currency, explained in detail in the deliverable [Implementation of digital social currency infrastructure (D5.5)](http://dcentproject.eu/wp-content/uploads/2015/10/D5.5-Implementation-of-digital-social-currency-infrastructure-.pdf) produced as part of the [D-CENT project](http://dcentproject.eu) and adopted as a component of the social wallet toolkit being developed for the [PIE project](https://github.com/pienews).
 
-## How reliable is this service
+## How to use Secrets
+
+<div class="well well-sm">
+1) Have a secret
+</div>
+
+For Secrets to be useful one needs to have a secret :^) don't be silly now, everyone has secrets. Lets say a backup of your passwords, a Bitcoin wallet, a testament... Remember it has to be just text and smaller than 1024 characters.
+
+<div class="well well-sm">
+2) Trust a group of people
+</div>
+
+Then you need to have 5 trusted friends or colleagues (lets say trusted peers) who can agree on the need to access your secrets in certain circumstances, for your own well being or that of your family or organisation.
+
+<div class="well well-sm">
+3) Paste the secret and distribute the shares
+</div>
+
+Clicking on [Share Secrets](/share) you can paste the secret in the text form and click submit. In the blink of an eye our software will give you long strings of numbers and letters that can be distributed to all 5 trusted peers. Its just a text string so you can decide the best medium to transmit it, its also rather easy to dictate.
+
+<div class="well well-sm">
+4) Explain to your peers what the secret is for
+</div>
+
+Take care to explain well the reason you are sharing this secret to all your trusted peers and the condition under which they shall meet again and combine all the shares to access the secret, which will be unknown to them until that moment. You need to trust them to respect your will on this, as they could also disregard the conditions and access your secret without your will.
+
+<div class="well well-sm">
+5) Peers decide that your condition is met
+</div>
+
+Among the trusted peers holding your shared secret at least 3 can decide at any time that your conditions to retreive the secret are met. Please note that just 3 out of 5 are enough, which insures the availability of the secret even in case 2 peers are unavailable for some reason.
+
+<div class="well well-sm">
+6) Peers meet to combine the shares
+</div>
+
+Your trusted peers can proceed to the [Combine Secrets](/combine) page even without your intervention. There they will find 3 text input fiels where to type or paste their share. Up to all of you to decide how this can happen, if the shares should be communicated to one person, or if all must be present and type it in, or dictate by phone, etc.
+
+<div class="well well-sm">
+7) Your secret is revealed to your peers
+</div>
+
+Once the 3 shares are submitted, our software will show the original secret exactly as you typed it in. If there was a typo in any of the strings our software will return an error, so be careful to check that every single letter of the share is correct: a mistake in communication can make it impossible to retrieve your secret.
+
+## How secure is Secrets
 
 Secret is written in a stateless language, does not make use of any database nor atoms and all content passing through it is not saved, only transformed and shown on screen.  This service is a functional demo allowing anyone to split up to 1Kb of secret data into 5 shares of which 3 (a number we call "quorum") are enough to recover the initial secret. 
 
@@ -33,7 +77,7 @@ Anyone planning to use Secrets for mission critical environments is encouraged t
 - change the alphabetical subset used to compose the shares
 - change the cryptographic "salt", a secret key that is unique to each installation
 
-If the secret being shared is really precious one should also consider adding an additional layer of encryption, for instance by using symmetric password encryption or even the public keys of all participants.
+If the secret being shared is really precious one should also consider adding an additional layer of encryption, for instance by using symmetric password encryption or even using public PGP keys of all participants.
 
 To share large files it is recommended to use filesystem encryption (for instance using our other software [Tomb](https://dyne.org/software/tomb)) with a key that is then shared: this way the encrypted files can be stored in duplicate copies in possession of every participant, but they will be accessed only when enough participants agree.
 

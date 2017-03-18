@@ -157,17 +157,24 @@
      ]]])
 
 (defn render-footer []
-  [:footer {:style "margin-top: 3em"}
+  [:footer {:class "row" :style "margin: 20px"}
    [:hr]
-   [:div {:class "pull-left footer"}
+   [:div {:class "footer col-md-4"}
+    [:img {:src "/static/img/ec_logo.png"
+           :alt "R&D funded by the European Commission"
+           :title "The research and development on Secrets as Free and Open Source Software has been funded by the European Commission." }]]
+
+   [:div {:class "footer col-md-4"}
+    [:img {:src "static/img/AGPLv3.png" :style "margin-top: 2.5em"
+           :alt "Affero GPLv3 License"
+           :title "Affero GPLv3 License"} ]]
+
+   [:div {:class "footer col-md-4"}
     [:a {:href "https://www.dyne.org"}
      [:img {:src "/static/img/swbydyne.png"
             :alt   "Software by Dyne.org"
             :title "Software by Dyne.org"}]]]
-   [:div {:class "pull-right footer"}
-    [:img {:src "static/img/AGPLv3.png" :style "margin-top: 3em"
-           :alt "Affero GPLv3 License"
-           :title "Affero GPLv3 License"} ]]])
+   ])
 
 
 (defn render-static [body]
