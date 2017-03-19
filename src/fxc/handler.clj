@@ -167,5 +167,5 @@
   (route/not-found "Not Found"))
 
 (def app
-  ((wrap-session
-    (wrap-defaults app-routes site-defaults))))
+  (-> (wrap-defaults app-routes site-defaults)
+      (wrap-session)))
