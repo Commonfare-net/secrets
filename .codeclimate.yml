@@ -1,0 +1,6 @@
+engines:
+ kibit:
+    enabled: true
+ratings:
+  paths:
+    - "**.clj"
