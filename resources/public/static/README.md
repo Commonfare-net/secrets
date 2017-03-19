@@ -16,7 +16,7 @@
 
 [![Build Status](https://travis-ci.org/PIENews/secrets.svg?branch=master)](https://travis-ci.org/PIENews/secrets)
 
-[![Code Climate](https://codeclimate.com/github/PIEnews/secrets.png)](https://codeclimate.com/github/PIEnews/secrets)
+[![Code Climate](https://codeclimate.com/github/PIENews/secrets.png)](https://codeclimate.com/github/PIENews/secrets)
 
 Secrets can be used to split a secret text into shares to be distributed to friends. When all friends agree, the shares can be combined to retrieve the original secret text, for instance to give consensual access to a lost pin, a password, a list of passwords, a private document or a key to an encrypted volume.
 
