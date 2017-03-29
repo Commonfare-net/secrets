@@ -76,13 +76,11 @@
        (conj {:session (web/check-session request)}
              (web/render
               (md/md-to-html-string
-               (slurp (io/resource (let [accept (:accept request)]
-                                     (case (:language accept)
-                                       "en" "public/static/README.md"
-                                       "it" "public/static/README-it.md"
-                                       "nl" "public/static/README-nl.md"
-                                       "hr" "public/static/README-hr.md"))
-                                   ))))))
+               (slurp (let [accept (:accept request)
+                            readme "public/static/README-"
+                            lang (:language accept)
+                            locale (io/resource (str readme lang ".md"))]
+                        (if (nil? locale) (io/resource (str readme ".md")) locale)))))))
 
   (GET "/about" request
        (conj {:session (web/check-session request)}
