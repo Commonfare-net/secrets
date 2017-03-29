@@ -27,6 +27,7 @@
             [compojure.handler :refer :all]
             [compojure.route :as route]
             [compojure.response :as response]
+
             [hiccup.page :as page]
             [hiccup.middleware :refer [wrap-base-url]]
 
@@ -41,7 +42,9 @@
             [markdown.core :as md]
             [hiccup.page :as page]
             [ring.middleware.session :refer :all]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
+            [ring.middleware.accept :refer [wrap-accept]]
+            [ring.middleware.defaults :refer
+             [wrap-defaults site-defaults]]))
 
 
 (defn generate-form-spec [config]
@@ -73,7 +76,13 @@
        (conj {:session (web/check-session request)}
              (web/render
               (md/md-to-html-string
-               (slurp (io/resource "public/static/README.md"))))))
+               (slurp (io/resource (let [accept (:accept request)]
+                                     (case (:language accept)
+                                       "en" "public/static/README.md"
+                                       "it" "public/static/README-it.md"
+                                       "nl" "public/static/README-nl.md"
+                                       "hr" "public/static/README-hr.md"))
+                                   ))))))
 
   (GET "/about" request
        (conj {:session (web/check-session request)}
@@ -97,23 +106,23 @@
 
   (POST "/share" request
         (let [config (web/check-session request)
-              params (web/check-params request generate-form-spec)]          
+              params (web/check-params request generate-form-spec)]
           (cond
             (not (contains? config :total))
               (web/render-error "Error: no Session.")
             (= (:status params) :error)
             (web/render-error config [:div [:h2 "form validation"]
                                       (:problems params)])
-            :else 
+            :else
             (if-let [input (:data params)]
-              (cond  
+              (cond
                 (not (contains? input :secret))
                 (web/render-error config "Error: no Params.")
                 (empty? (:secret input))
                 (web/render-error config "No input.")
                 :else
                 ;; all checks passed
-                
+
                 (let [pass   (trunc (:max config) (:secret input))
                       shares (encode config pass)]
                   (conj {:session config}
@@ -127,12 +136,12 @@
                                       (:quorum config) ":")]
                             [:ul (map #(conj [:li {:class "content"}] %)
                                       shares)]]]]))))))))
-  
-  
+
+
   (GET "/combine" request
        (let [config (web/check-session request)]
          (conj {:session config}
-               (web/render 
+               (web/render
                 [:div {:class "recovery row center"}
                  [:h2 "Combine a Shared Secret"]
                  [:div {:class "content input-form"}]
@@ -140,14 +149,14 @@
 
   (POST "/combine" request
         (let [config (web/check-session request)
-              params (web/check-params request combine-form-spec)]          
+              params (web/check-params request combine-form-spec)]
           (cond
             (not (contains? config :total))
             (web/render-error "Error: no Session.")
             (= (:status params) :error)
             (web/render-error config [:div [:h2 "form validation"]
                                       (:problems params)])
-            :else 
+            :else
             (conj {:session config}
                   (web/render
                    [:div {:class "combined"}
@@ -168,4 +177,10 @@
 
 (def app
   (-> (wrap-defaults app-routes site-defaults)
-      (wrap-session)))
+      (wrap-session)
+      (wrap-accept {:mime ["text/html"]
+                    ;; preference in language, fallback to english
+                    :language ["en" :qs 0.5
+                               "it" :qs 1
+                               "nl" :qs 1
+                               "hr" :qs 1]})))

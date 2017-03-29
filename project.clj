@@ -5,6 +5,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.5.2"]
                  [ring/ring-defaults "0.2.3"]
+                 [ring-middleware-accept "2.0.3"]
                  [json-html "0.4.0"]
                  [formidable "0.1.10"]
                  [markdown-clj "0.9.98"]
