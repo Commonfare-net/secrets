@@ -70,23 +70,21 @@
   [n s]
   (subs s 0 (min (count s) n)))
 
+(defn readme [request]
+  (conj {:session (web/check-session request)}
+        (web/render
+         (md/md-to-html-string
+          (slurp (let [accept (:accept request)
+                       readme "public/static/README-"
+                       lang (:language accept)
+                       locale (io/resource (str readme lang ".md"))]
+                   (if (nil? locale) (io/resource "public/static/README.md") locale)))))))
+
 (defroutes app-routes
 
-  (GET "/" request
-       (conj {:session (web/check-session request)}
-             (web/render
-              (md/md-to-html-string
-               (slurp (let [accept (:accept request)
-                            readme "public/static/README-"
-                            lang (:language accept)
-                            locale (io/resource (str readme lang ".md"))]
-                        (if (nil? locale) (io/resource (str readme ".md")) locale)))))))
+  (GET "/" request (readme request))
 
-  (GET "/about" request
-       (conj {:session (web/check-session request)}
-             (web/render
-              (md/md-to-html-string
-               (slurp (io/resource "public/static/README.md"))))))
+  (GET "/about" request (readme request))
 
   (GET "/share" request
        (let [config (web/check-session request)]
