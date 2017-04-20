@@ -41,10 +41,12 @@
 
             [markdown.core :as md]
             [hiccup.page :as page]
+			[ring.adapter.jetty :refer :all]
             [ring.middleware.session :refer :all]
             [ring.middleware.accept :refer [wrap-accept]]
             [ring.middleware.defaults :refer
-             [wrap-defaults site-defaults]]))
+             [wrap-defaults site-defaults]])
+  (:gen-class))
 
 
 (defn generate-form-spec [config]
@@ -180,3 +182,8 @@
                                "it" :qs 1
                                "nl" :qs 1
                                "hr" :qs 1]})))
+
+(defn -main []
+  (run-jetty app {:port 8080
+				  :host "localhost"
+				  :open-browser? true}))

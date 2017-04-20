@@ -6,6 +6,8 @@
                  [compojure "1.5.2"]
                  [ring/ring-defaults "0.2.3"]
                  [ring-middleware-accept "2.0.3"]
+				 [ring/ring-core "1.6.0-RC3"]
+				 [ring/ring-jetty-adapter "1.6.0-RC3"]
                  [json-html "0.4.0"]
                  [formidable "0.1.10"]
                  [markdown-clj "0.9.98"]
@@ -17,9 +19,12 @@
 
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler fxc.handler/app}
+  :main ^:skip-aot fxc.handler
+  :target-path "target/%s"
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                         [ring/ring-mock "0.3.0"]
-                        [midje "1.8.3"] 
+                        [midje "1.8.3"]
                         [kerodon "0.8.0"]]
-         :plugins [[lein-midje "3.1.3"]]}})
+         :plugins [[lein-midje "3.1.3"]]}
+   :uberjar {:aot :all}})
