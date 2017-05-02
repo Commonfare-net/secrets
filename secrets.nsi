@@ -23,6 +23,6 @@ Section ""
   Exec "javaw.exe -Xmx20M -jar target/uberjar/fxc-0.1.0-SNAPSHOT-standalone.jar"
   Sleep 3000
   ExecShell "open" "http://localhost:8080"
-  messagebox mb_ok `Secrets is now running on your computer, reachable via web browser on port 8080 (http://localhost:8080). A web browser should be open automatically with more information. To stop running Secrets, end the Java task using the Task Manager (ctrl+alt+del).`
+  messagebox mb_ok `Secrets is now running on your computer, reachable via web browser on port 8080 (http://localhost:8080). A web browser should be open automatically with more information. To stop running Secrets, end the Java task using the Task Manager (Ctrl+Shift+ESC).`
 
 SectionEnd
