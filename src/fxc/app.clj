@@ -22,7 +22,8 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (ns ^:skip-aot fxc.app
-  (:require [fxc.handler :as handler])
+  (:require [fxc.handler :as handler]
+			[fxc.config :refer :all])
   (:import
    (javafx.beans.value ChangeListener ObservableValue)
    (javafx.concurrent Worker$State)
@@ -41,13 +42,13 @@
 (defonce ^:private backend (atom 0))
 
 (defn app-start [app ^Stage stage]
-
+ (swap! run-mode :desk)
   (let [server (handler/start-backend)
         root (StackPane.)
         btn (Button.)
         web-view (WebView.)
         state-prop (.stateProperty (.getLoadWorker (.getEngine web-view)))
-        url "http://localhost:8080"]
+        url "http://localhost:8080/share"]
 
     ;; Add a WebView (headless browser)
     (.add (.getChildren root) web-view)

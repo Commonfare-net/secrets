@@ -26,6 +26,8 @@
             [clojure.java.io :as io]
             [cheshire.core :refer :all]))
 
+(def run-mode (atom :web))
+
 (declare config-read)
 
 (defn config-read
@@ -35,10 +37,10 @@
   ([default]
    (let [home (System/getenv "HOME")
          pwd  (System/getenv "PWD")]
-     (loop [[p & paths] ["/etc/secrets/config.json" 
+     (loop [[p & paths] ["/etc/secrets/config.json"
                          (str home "/.secrets/config.json")
                          (str pwd "/config.json")]
-            res default ]
+            res default]
        (let [res (merge res
                         (if (.exists (io/as-file p))
                           (conj {:config p} (parse-stream (io/reader p) true))))]
