@@ -58,9 +58,10 @@
                     (changed [^ObservableValue ov
                               ^Worker$State old-state
                               ^Worker$State new-state]
-                      (println (str "Current state:" (.name new-state)))
-                      (if (= new-state Worker$State/SUCCEEDED)
-                        (println (str "URL '" url "' load completed!"))))))
+                      ;; (println (str "Current state:" (.name new-state)))
+                      ;; (if (= new-state Worker$State/SUCCEEDED)
+                      ;;   (println (str "URL '" url "' load completed!")))
+                      )))
     ;; Load a URL
     (.load (.getEngine web-view) url)
 

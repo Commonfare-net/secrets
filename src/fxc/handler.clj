@@ -51,8 +51,7 @@
 
 (defn generate-form-spec [config]
   {:renderer :bootstrap3-stacked
-   :fields [{:name :secret  :type :textarea :datatype :string
-              }]
+   :fields [{:name :secret  :type :textarea :datatype :string}]
    :validations [[:required [:secret]]
                  [:max-length (:max config) :secret]]
    :action "/share"
@@ -96,7 +95,7 @@
                  (str "Split a Secret to "
                       (:total config)
                       " shares with quorum "
-                      (:quorum config))
+                      (:quorum config) ". Type the secret below:")
                  [:div {:class "content input-form"}
                   (fc/render-form
                    (generate-form-spec config))]]))))
