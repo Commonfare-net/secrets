@@ -28,6 +28,7 @@
                         [midje "1.8.3"]
                         [kerodon "0.8.0"]]
          :plugins [[lein-midje "3.1.3"]]
+         :aot :all
          :main fxc.handler}
 
    :uberjar {:aot  :all
