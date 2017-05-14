@@ -19,7 +19,9 @@
              ]
 
   :plugins [[lein-ring "0.9.7"]]
-  :ring {:handler secrets.handler/app}
+  :ring    {:handler secrets.handler/app}
+  :uberwar {:handler secrets.handler/app}
+
   :main secrets.handler
   :target-path "target/%s"
   :profiles
