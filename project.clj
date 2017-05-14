@@ -20,13 +20,15 @@
 
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler fxc.handler/app}
-  :main ^:skip-aot fxc.app
+  :main fxc.handler
   :target-path "target/%s"
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                         [ring/ring-mock "0.3.0"]
                         [midje "1.8.3"]
                         [kerodon "0.8.0"]]
-         :plugins [[lein-midje "3.1.3"]]}
-   :jar {:aot :all}
-   :uberjar {:aot :all}})
+         :plugins [[lein-midje "3.1.3"]]
+         :main fxc.handler}
+
+   :uberjar {:aot  :all
+             :main fxc.app}})
