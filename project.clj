@@ -3,15 +3,15 @@
   :url "https://secrets.dyne.org"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [compojure "1.5.2"]
-                 [ring/ring-defaults "0.2.3"]
+                 [compojure "1.6.0"]
+                 [ring/ring-defaults "0.3.0"]
                  [ring-middleware-accept "2.0.3"]
-				 [ring/ring-core "1.6.0-RC3"]
-				 [ring/ring-jetty-adapter "1.6.0-RC3"]
-                 [json-html "0.4.0"]
+				 [ring/ring-core "1.6.1"]
+				 [ring/ring-jetty-adapter "1.6.1"]
+                 [json-html "0.4.3"]
                  [formidable "0.1.10"]
-                 [markdown-clj "0.9.98"]
-                 [org.clojars.dyne/fxc "0.3.0"]
+                 [markdown-clj "0.9.99"]
+                 [org.clojars.dyne/fxc "0.4.0"]
                  [org.clojars.metal-slime/javafx2.2.0 "2.2.0"]]
 
   :jvm-opts ["-Djava.security.egd=file:/dev/random" ;use a proper random source
