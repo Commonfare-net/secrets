@@ -116,7 +116,8 @@
   ([] (render-head
        "Simple Secret Sharing" ;; default title
        "Decentralised Social Management of Secrets" ;; default desc
-       (mode :web "https://secrets.dyne.org" ;; url for web
+       (mode :web
+             "https://secrets.dyne.org" ;; url for web
 			 "http://localhost:8080"))) ;; url for desk
 
   ([title desc url]
@@ -144,7 +145,7 @@
     (page/include-css "/static/css/bootstrap.min.css")
     (page/include-css "/static/css/bootstrap-theme.min.css")
     (mode :web (page/include-css "/static/css/gh-fork-ribbon.css"))
-    (mode :web (page/include-css "/static/css/freecoin.css"))]))
+    (mode :web (page/include-css "/static/css/webapp.css"))]))
 
 (defn render-navbar []
  [:nav {:class "navbar navbar-default navbar-static-top"}
@@ -167,21 +168,26 @@
 (defn render-footer []
   [:footer {:class "row" :style "margin: 20px"}
    [:hr]
-   [:div {:class "footer col-md-4"}
+   [:div {:class "footer col-sm-2"
+          :style "float: left"}
     [:img {:src "/static/img/ec_logo.png"
            :alt "R&D funded by the European Commission"
            :title "The research and development on Secrets as Free and Open Source Software has been funded by the European Commission."}]]
 
-   [:div {:class "footer col-md-4"}
-    [:img {:src "static/img/AGPLv3.png" :style "margin-top: 2.5em"
-           :alt "Affero GPLv3 License"
-           :title "Affero GPLv3 License"}]]
-
-   [:div {:class "footer col-md-4"}
+   [:div {:class "footer col-sm-2"
+          :style "float: right"}
     [:a {:href "https://www.dyne.org"}
      [:img {:src "/static/img/swbydyne.png"
             :alt   "Software by Dyne.org"
-            :title "Software by Dyne.org"}]]]])
+            :title "Software by Dyne.org"}]]]
+
+   [:div {:class "footer col-sm-2"
+          :style "float: none; margin: 0 auto; clear: none"}
+    [:img {:src "static/img/AGPLv3.png"
+           :alt "Affero GPLv3 License"
+           :title "Affero GPLv3 License"}]]
+
+])
 
 
 

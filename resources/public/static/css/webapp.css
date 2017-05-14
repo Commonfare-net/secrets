@@ -6,6 +6,7 @@ body {
 	font-size: 22px;
 	font-smooth: always;
 	-webkit-font-smoothing: antialiased;
+	font-smoothing: antialiased;
 }
 
 code {
@@ -28,6 +29,11 @@ img {
 	max-width: 100%;
 	vertical-align: middle;
 	overflow: hidden;
+}
+
+.footer img {
+	vertical-align: middle;
+	width: 9em;
 }
 
 .input-form {
