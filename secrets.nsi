@@ -20,5 +20,5 @@ LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"
 
 Section ""
   DetailPrint "Starting Secrets.dyne.org"
-  Exec "javaw.exe -Xmx128M -jar target/uberjar/fxc-0.1.0-SNAPSHOT-standalone.jar"
+  Exec "javaw.exe -Xmx128M -jar Secrets.jar"
 SectionEnd
