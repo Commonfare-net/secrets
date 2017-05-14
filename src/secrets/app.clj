@@ -1,4 +1,4 @@
-;; FXC - Secret Sharing
+;; Secrets
 
 ;; part of Decentralized Citizen Engagement Technologies (D-CENT)
 ;; R&D funded by the European Commission (FP7/CAPS 610349)
@@ -21,9 +21,9 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(ns ^:skip-aot fxc.app
-  (:require [fxc.handler :as handler]
-			[fxc.config :refer :all])
+(ns ^:skip-aot secrets.app
+  (:require [secrets.handler :as handler]
+			[secrets.config :refer :all])
   (:import
    (javafx.beans.value ChangeListener ObservableValue)
    (javafx.concurrent Worker$State)
@@ -35,7 +35,7 @@
    (javafx.scene.web WebView)))
 
 (gen-class
- :name fxc.app
+ :name secrets.app
  :extends javafx.application.Application
  :prefix "app-")
 
@@ -77,4 +77,4 @@
 
 (defn -main []
   (javafx.application.Application/launch
-   fxc.app (into-array String [])))
+   secrets.app (into-array String [])))

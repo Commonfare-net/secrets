@@ -1,5 +1,5 @@
-(defproject fxc "0.1.0-SNAPSHOT"
-  :description "FXC simple secret sharing library"
+(defproject secrets "0.4.0-SNAPSHOT"
+  :description "Simple Secret Sharing"
   :url "https://secrets.dyne.org"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
@@ -19,8 +19,8 @@
              ]
 
   :plugins [[lein-ring "0.9.7"]]
-  :ring {:handler fxc.handler/app}
-  :main fxc.handler
+  :ring {:handler secrets.handler/app}
+  :main secrets.handler
   :target-path "target/%s"
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
@@ -32,4 +32,4 @@
          :main fxc.handler}
 
    :uberjar {:aot  :all
-             :main fxc.app}})
+             :main secrets.app}})

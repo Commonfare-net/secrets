@@ -1,8 +1,8 @@
-(ns fxc.handler-test
+(ns secrets.handler-test
   (:require [clojure.test :refer :all]
             [clojure.pprint :as pp]
             [ring.mock.request :as mock]
-            [fxc.handler :refer :all]))
+            [secrets.handler :refer :all]))
 
 (deftest test-app
   (testing "main route"

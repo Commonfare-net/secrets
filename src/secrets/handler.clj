@@ -1,4 +1,4 @@
-;; FXC - Secret Sharing
+;; Secrets
 
 ;; part of Decentralized Citizen Engagement Technologies (D-CENT)
 ;; R&D funded by the European Commission (FP7/CAPS 610349)
@@ -21,7 +21,7 @@
 ;; You should have received a copy of the GNU Affero General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(ns fxc.handler
+(ns secrets.handler
   (:require [clojure.java.io :as io]
             [compojure.core :refer :all]
             [compojure.handler :refer :all]
@@ -32,9 +32,9 @@
             [hiccup.middleware :refer [wrap-base-url]]
 
             [fxc.core :refer :all]
-            [fxc.webpage :as web]
-            [fxc.config :refer :all]
-            [fxc.form_helpers :as fh]
+            [secrets.webpage :as web]
+            [secrets.config :refer :all]
+            [secrets.form_helpers :as fh]
 
             [formidable.parse :as fp]
             [formidable.core :as fc]
