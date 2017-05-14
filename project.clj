@@ -11,7 +11,8 @@
                  [json-html "0.4.0"]
                  [formidable "0.1.10"]
                  [markdown-clj "0.9.98"]
-                 [org.clojars.dyne/fxc "0.1.0"]]
+                 [org.clojars.dyne/fxc "0.3.0"]
+                 [org.clojars.metal-slime/javafx2.2.0 "2.2.0"]]
 
   :jvm-opts ["-Djava.security.egd=file:/dev/random" ;use a proper random source
              "-XX:-OmitStackTraceInFastThrow" ; stacktrace JVM exceptions
@@ -19,7 +20,7 @@
 
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler fxc.handler/app}
-  :main ^:skip-aot fxc.handler
+  :main ^:skip-aot fxc.app
   :target-path "target/%s"
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
@@ -27,4 +28,5 @@
                         [midje "1.8.3"]
                         [kerodon "0.8.0"]]
          :plugins [[lein-midje "3.1.3"]]}
+   :jar {:aot :all}
    :uberjar {:aot :all}})

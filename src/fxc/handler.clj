@@ -183,7 +183,9 @@
                                "nl" :qs 1
                                "hr" :qs 1]})))
 
-(defn -main []
+(defn start-backend []
+  (println "Starting backend on http://localhost:8080")
   (run-jetty app {:port 8080
-				  :host "localhost"
-				  :open-browser? true}))
+                  :host "localhost"
+                  :join? false}))
+(defn stop-backend [server] (.stop server))
