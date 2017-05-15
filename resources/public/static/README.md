@@ -22,6 +22,8 @@ Secrets can be used to split a secret text into shares to be distributed to frie
 
 Secret sharing can be useful in many different situations and this tool is a simple and well documented free and open source implementation available for anyone to use from this website, but also independently on an offline PC.
 
+**Download** the Secrets desktop application for off-line use from: [files.dyne.org/secrets](https://files.dyne.org/secrets)
+
 ## How to use Secrets
 
 <div class="well well-sm">
