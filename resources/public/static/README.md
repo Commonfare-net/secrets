@@ -14,7 +14,7 @@ title="software by Dyne.org" class="pull-right"></a>
 <img src="https://secrets.dyne.org/static/img/secret_ladies.jpg"
 title="try it online" alt="use secrets online" style="overflow: hidden">
 
-[![Build Status](https://travis-ci.org/PIENews/secrets.svg?branch=master)](https://travis-ci.org/PIENews/secrets)
+FXC crypto library status: [![Build Status](https://travis-ci.org/dyne/FXC.svg?branch=master)](https://travis-ci.org/dyne/FXC)
 
 [![Code Climate](https://codeclimate.com/github/PIENews/secrets.png)](https://codeclimate.com/github/PIENews/secrets)
 
