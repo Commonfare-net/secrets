@@ -12,11 +12,13 @@ title="software by Dyne.org" class="pull-right"></a>
 
 <a href="https://secrets.dyne.org/share">
 <img src="https://secrets.dyne.org/static/img/secret_ladies.jpg"
-title="try it online" alt="use secrets online" style="overflow: hidden">
+title="try it online" alt="use secrets online" style="overflow: hidden"></a>
 
 FXC crypto library status: [![Build Status](https://travis-ci.org/dyne/FXC.svg?branch=master)](https://travis-ci.org/dyne/FXC)
 
-[![Code Climate](https://codeclimate.com/github/PIENews/secrets.png)](https://codeclimate.com/github/PIENews/secrets)
+Secrets app code coverage: [![Code Climate](https://codeclimate.com/github/PIENews/secrets.png)](https://codeclimate.com/github/PIENews/secrets)
+
+FXC code coverage: [![Code Climate](https://codeclimate.com/github/dyne/FXC.png)](https://codeclimate.com/github/dyne/FXC)
 
 Secrets can be used to split a secret text into shares to be
 distributed to friends. When all friends agree, the shares can be
@@ -113,6 +115,11 @@ the [Freecoin toolkit](http://freecoin.ch). FXC code is completely
 covered by tests and can be used by other clojure
 applications
 [via org.clojars.dyne](https://clojars.org/org.clojars.dyne/fxc).
+
+The aim of the FXC and Secrets multi-sig implementation is to maintain
+backward compatibility across new versions and provide a library and
+application that is fully covered by tests units and whose functioning
+can be insured on a long-term basis.
 
 Both Secrets and FXC are written in a functional, non-imperative,
 stateless language and don't use any database: all content passing
